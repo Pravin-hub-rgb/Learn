@@ -1,0 +1,59 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#heroSection {
+    background-color: rgba(128, 128, 128, 0.493);
+    height: 70vh;
+    width: 100%;
+    margin-top: 80px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    padding: 20px;
+}
+
+#heroSection div {
+    /* border: 1px solid red; */
+}
+
+#img {
+    display: flex;
+
+}
+
+#img img {
+    margin: auto;
+    display: inline-block;
+    border-radius: 10px;
+}
+
+#details div{
+    padding: 10px;
+}
+
+#score{
+    display: flex;
+}
+
+#play{
+    display: flex;
+}
+
+#play .circle{
+    background-color: rgb(63, 61, 61);
+    border-radius: 100%;
+    margin: 5px;
+    width: 35px;
+    height: 35px;
+}
+
+#play > div:last-child{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#play > div:last-child p{
+    font-weight: 600;
+}
