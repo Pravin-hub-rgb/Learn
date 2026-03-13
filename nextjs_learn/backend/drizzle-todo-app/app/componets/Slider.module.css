@@ -1,0 +1,113 @@
+.sliderContainer {
+  width: 100%;
+  overflow: hidden;
+  padding: 2rem 0; /* vertical breathing room */
+}
+
+.swiper {
+  width: 100%;
+  height: auto;
+}
+
+.slide {
+  width: auto !important; /* important for variable width feel */
+  height: 100%;
+}
+
+.card {
+  position: relative;
+  width: 280px;           /* base card width — adjust to your design */
+  height: 360px;          /* adjust height as needed */
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  background: #f8f9fa;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none; /* prevents drag issues */
+}
+
+.cardContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  padding: 2rem 1.5rem 1.5rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.cardName {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+}
+
+.cardDescription {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 400;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* Optional overlay example */
+/* 
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  color: white;
+  display: flex;
+  align-items: flex-end;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover .overlay {
+  opacity: 1;
+}
+*/
+
+/* Hide scrollbar on desktop but keep swipe working on mobile */
+.swiper::-webkit-scrollbar {
+  display: none;
+}
+
+.swiper {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Mobile: ensure touch works smoothly */
+@media (max-width: 480px) {
+  .card {
+    width: 240px;
+    height: 320px;
+  }
+}
+
+/* Force linear movement – removes easing, makes speed perfectly constant */
+.swiper-wrapper {
+  transition-timing-function: linear !important;
+}
+
+/* Optional: make it even smoother on some browsers */
+.swiper {
+  will-change: transform;
+}   

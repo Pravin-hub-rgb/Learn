@@ -1,0 +1,115 @@
+/* Shared styles for all slider components */
+.container {
+  width: 100%;
+  overflow: hidden;
+  padding: 2rem 0;
+  position: relative;
+}
+
+.card {
+  width: 320px;
+  height: 420px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  background: #f8f9fa;
+  flex-shrink: 0;
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+/* Support for larger cards in MarqueeSlider */
+.card.w-96.h-\[500px\] {
+  width: 24rem; /* 384px */
+  height: 500px;
+}
+
+.card.w-96.h-\[570px\] {
+  width: 24rem; /* 384px */
+  height: 570px;
+}
+
+.card.w-96.h-\[500px\]:hover,
+.card.w-96.h-\[570px\]:hover {
+  transform: scale(1.03); /* slightly less scale for larger cards */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.cardContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  padding: 2rem 1.5rem 1.5rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.cardName {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+}
+
+.cardDescription {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 400;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card {
+    width: 280px;
+    height: 360px;
+  }
+  
+  .cardName {
+    font-size: 1.1rem;
+  }
+  
+  .cardDescription {
+    font-size: 0.85rem;
+  }
+  
+  .cardContent {
+    padding: 1.5rem 1rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    width: 240px;
+    height: 320px;
+  }
+  
+  .cardName {
+    font-size: 1rem;
+  }
+  
+  .cardDescription {
+    font-size: 0.8rem;
+  }
+  
+  .cardContent {
+    padding: 1rem 0.75rem 0.75rem;
+  }
+}
