@@ -61,7 +61,7 @@ db/
 Phase 1 mein SQL Editor mein yeh likha tha:
 
 ```sql
-CREATE TABLE todos (
+CREATE TABLE drizzle_todo (
   id    SERIAL   PRIMARY KEY,
   title TEXT     NOT NULL,
   done  BOOLEAN  DEFAULT false
@@ -76,7 +76,7 @@ Phase 1 mein `todos` naam ki table SQL Editor se manually banayi thi — woh `ne
 
 Ab agar hum bhi `todos` naam rakhen — `drizzle-kit push` chalayenge toh confusing ho jaayega — "yeh table Drizzle ne banayi ya maine manually banayi thi?" — track nahi rahega.
 
-Isliye Drizzle wali table ka naam alag rakhte hain — **`drizzle_todos`** — sensible bhi hai — clearly pata hai yeh Drizzle se bani hai.
+Isliye Drizzle wali table ka naam alag rakhte hain — **`drizzle_todo`** — sensible bhi hai — clearly pata hai yeh Drizzle se bani hai.
 
 Iske liye column types chahiye — `SERIAL`, `TEXT`, `BOOLEAN` — yeh SQL types hain. Drizzle mein inke TypeScript versions `drizzle-orm/pg-core` se aate hain.
 
@@ -108,12 +108,12 @@ boolean   ← BOOLEAN — true ya false
 ```ts
 import { pgTable, serial, text, boolean } from 'drizzle-orm/pg-core'
 
-export const drizzle_todos = pgTable('drizzle_todos', {
+export const todos = pgTable('drizzle_todo', {
 
 })
 ```
 
-**`'drizzle_todos'`** — database mein table ka naam yahi hoga.
+**`'drizzle_todo'`** — database mein table ka naam yahi hoga.
 
 **`export` kyun?** — Baad mein `db/index.ts` mein import karni padegi — isliye export.
 
@@ -122,7 +122,7 @@ export const drizzle_todos = pgTable('drizzle_todos', {
 Pehla column — `id`:
 
 ```ts
-export const todos = pgTable('drizzle_todos', {
+export const todos = pgTable('drizzle_todo', {
   id: serial('id').primaryKey(),
 })
 ```
@@ -138,7 +138,7 @@ Phase 1 SQL se compare: `id SERIAL PRIMARY KEY` — same cheez.
 `title` add karo:
 
 ```ts
-export const todos = pgTable('drizzle_todos', {
+export const todos = pgTable('drizzle_todo', {
   id: serial('id').primaryKey(),
   title: text('title').notNull(),
 })
@@ -155,7 +155,7 @@ Phase 1 SQL: `title TEXT NOT NULL`
 `done` add karo:
 
 ```ts
-export const todos = pgTable('drizzle_todos', {
+export const todos = pgTable('drizzle_todo', {
   id: serial('id').primaryKey(),
   title: text('title').notNull(),
   done: boolean('done').default(false).notNull(),
@@ -176,7 +176,7 @@ Side by side dekho — bilkul same cheez — sirf TypeScript mein:
 
 ```sql
 -- Phase 1 SQL
-CREATE TABLE drizzle_todos (
+CREATE TABLE drizzle_todo (
   id    SERIAL   PRIMARY KEY,
   title TEXT     NOT NULL,
   done  BOOLEAN  DEFAULT false
@@ -185,7 +185,7 @@ CREATE TABLE drizzle_todos (
 
 ```ts
 // TypeScript mein
-export const todos = pgTable('drizzle_todos', {
+export const todos = pgTable('drizzle_todo', {
   id:    serial('id').primaryKey(),
   title: text('title').notNull(),
   done:  boolean('done').default(false).notNull(),
@@ -238,7 +238,7 @@ Schema badla — type automatically update. Tu manually nahi sambhalta.
 import { pgTable, serial, text, boolean } from 'drizzle-orm/pg-core'
 import { InferSelectModel } from 'drizzle-orm'
 
-export const todos = pgTable('drizzle_todos', {
+export const todos = pgTable('drizzle_todo', {
   id: serial('id').primaryKey(),
   title: text('title').notNull(),
   done: boolean('done').default(false).notNull(),
@@ -256,7 +256,7 @@ todo-drizzle/
 ├── app/
 │   └── page.tsx
 ├── db/
-│   └── schema.ts       ← drizzle_todos table define ki ✅
+│   └── schema.ts       ← drizzle_todo table define ki ✅
 ├── .env.local
 └── package.json
 ```

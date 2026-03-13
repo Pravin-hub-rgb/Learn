@@ -11,71 +11,19 @@ Ab ek kaam bacha hai — **Neon mein actual table banana.**
 
 ## Problem — Table Kahan Hai?
 
-`db/schema.ts` mein `drizzle_todos` table TypeScript mein define ki — par yeh sirf TypeScript code hai.
+`db/schema.ts` mein `drizzle_todo` table TypeScript mein define ki — par yeh sirf TypeScript code hai.
 
 Neon database mein abhi koi table nahi hai — ya Phase 1 mein banayi thi toh woh hai.
 
-App chalao — `db.select().from(drizzle_todos)` karo — kya hoga?
+App chalao — `db.select().from(drizzle_todo)` karo — kya hoga?
 
 ```
 Error — relation "todos" does not exist
 ```
 
-Neon ko pata hi nahi ki `drizzle_todos` table chahiye.
+Neon ko pata hi nahi ki `drizzle_todo` table chahiye.
 
 **Neon mein table kaise banegi?**
-
----
-
-## Real-World Issue: Schema Pull Conflicts
-
-**Problem:** Jab tum `npx drizzle-kit push` chalate ho, toh Drizzle pehle **schema pull** karta hai - yani Neon database mein check karta hai ki konsi tables pehle se exist karti hain.
-
-Agar tumhare schema file mein koi table define nahi hai jo database mein pehle se hai, toh Drizzle sochta hai ki woh table delete ho chuki hai aur tum use drop karna chahte ho.
-
-**Example:**
-- Phase 1 mein tumne manually `todos` table banayi thi
-- Phase 2.3 mein tumne `drizzle_todos` table define ki
-- `npx drizzle-kit push` chalane par Drizzle ne dekha:
-  - Database mein: `todos` table (4 items ke saath)
-  - Tumhare schema mein: sirf `drizzle_todos` table
-  - Missing: `todos` table
-
-Isliye Drizzle ne warning di:
-```
-Warning: Found data-loss statements:
-· You're about to delete todos table with 4 items
-
-THIS ACTION WILL CAUSE DATA LOSS AND CANNOT BE REVERTED
-```
-
-**Solutions:**
-
-1. **Drop the old table** (Recommended for practice):
-   ```sql
-   DROP TABLE todos;  -- Neon SQL Editor mein
-   ```
-   Phir `npx drizzle-kit push` dobara chalao.
-
-2. **Include both tables in schema**:
-   ```ts
-   // db/schema.ts mein dono tables define karo
-   export const todos = pgTable('todos', { /* columns */ });
-   export const drizzle_todos = pgTable('drizzle_todos', { /* columns */ });
-   ```
-
-3. **Force the push** (Use carefully):
-   ```bash
-   npx drizzle-kit push --force
-   ```
-
-**Why This Happens:**
-Drizzle schema-first approach follow karta hai - matlab jo tables tumhare schema file mein define hain, wahi database mein honi chahiye. Jo tables schema mein nahi hain lekin database mein hain, unhe Drizzle drop kar deta hai.
-
-**Best Practice:**
-- Production mein pehle se existing tables ko schema mein include karo
-- Practice projects mein purani tables drop kar do
-- Hamesha `drizzle-kit push` se pehle schema file ko verify karo
 
 ---
 
@@ -169,7 +117,7 @@ export default defineConfig({
 
 **Migration kya hota hai?**
 
-Aaj `drizzle_todos` table banayi. Kal ek naya column chahiye — `createdAt`. Database mein pehle se table hai — directly nahi badal sakte. Pehle ek "change record" banate hain — phir apply karte hain. Yeh change record migration file hai.
+Aaj `drizzle_todo` table banayi. Kal ek naya column chahiye — `createdAt`. Database mein pehle se table hai — directly nahi badal sakte. Pehle ek "change record" banate hain — phir apply karte hain. Yeh change record migration file hai.
 
 `drizzle-kit` yeh files `drizzle/` folder mein save karta hai.
 
@@ -251,7 +199,7 @@ drizzle.config.ts padha
         ↓
 "neondb se connect karo" — DATABASE_URL se connect kiya
         ↓
-Neon check kiya — "drizzle_todos table pehle se hai?"
+Neon check kiya — "drizzle_todo table pehle se hai?"
         ↓
 Phase 1 mein banayi thi aur same structure hai → kuch nahi kiya ✅
 Ya nahi thi → CREATE TABLE SQL khud chala di ✅
@@ -265,7 +213,7 @@ Terminal mein dikhega:
 
 **Neon mein verify karo:**
 
-Left sidebar — "Tables" — `drizzle_todos` dikh jaayegi. ✅
+Left sidebar — "Tables" — `drizzle_todo` dikh jaayegi. ✅
 
 ---
 

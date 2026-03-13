@@ -3,7 +3,7 @@
 ## Pichle Doc Se Aage
 
 2.2 mein:
-- `db/schema.ts` bani — `drizzle_todos` table TypeScript mein define ki
+- `db/schema.ts` bani — `drizzle_todo` table TypeScript mein define ki
 - `Todo` type bana — `InferSelectModel` se
 
 Schema taiyaar hai — ab connection file banate hain.
@@ -115,10 +115,10 @@ const sql = neon(process.env.DATABASE_URL!)
 
 **`import * as schema` kya hai?**
 
-`schema.ts` mein do cheezein export ki hain — `drizzle_todos` table aur `Todo` type. `* as schema` matlab — saari exports ek saath `schema` naam ke object mein aa jaayengi.
+`schema.ts` mein do cheezein export ki hain — `drizzle_todo` table aur `Todo` type. `* as schema` matlab — saari exports ek saath `schema` naam ke object mein aa jaayengi.
 
 ```ts
-schema.drizzle_todos   ← todos table
+schema.drizzle_todo   ← todos table
 schema.Todo    ← Todo type
 ```
 
