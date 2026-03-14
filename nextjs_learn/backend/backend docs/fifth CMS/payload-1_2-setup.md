@@ -41,6 +41,10 @@ Payload mein kuch pre-made templates hain — blog, ecommerce. Hum scratch se ba
 
 Drizzle wala Neon same use karenge — familiar hai.
 
+**Database PostgreSQL select karne ke baad, setup tumse database connection string maangega. Agar tumne Neon setup kiya hai, toh wahan pe woh connection string paste karo. Agar nahi kiya hai, toh default template string hi use kar sakte ho.**
+
+**Recommendation:** Agar pehle kisi aur project (jaise drizzle) ke liye Neon database use kiya hai, toh Payload ke liye **alag database** banao. Same database use karne se tables conflict ho sakte hain aur Admin Panel properly nahi khulega. Fresh setup ke liye new database + fresh project best hai.
+
 Install hone do — thoda time lagega.
 
 ---
@@ -97,6 +101,8 @@ PAYLOAD_SECRET=
 DATABASE_URI=postgresql://username:password@ep-something.neon.tech/neondb?sslmode=require
 ```
 
+**Note:** Agar installation time pe database connection string nahi daali gayi ho, toh yahan pe manually apni Neon database ki connection string paste karo.
+
 **`PAYLOAD_SECRET`** — koi bhi random string — Admin Panel ke liye security:
 
 ```
@@ -105,32 +111,118 @@ PAYLOAD_SECRET=kuch-bhi-likho-yahan-lamba-sa
 
 ---
 
-## `payload.config.ts` — Ek Nazar
+## `payload.config.ts` — Payload ki Setting File
+
+Ye file Payload CMS ki setting define karti hai — jaise Drizzle mein `db/index.ts` database connection karti thi.
+
+### Collection Kya Hota Hai?
+
+**Collection** — Payload ka table hai. Drizzle mein hum `pgTable` se table banate the, Payload mein hum `CollectionConfig` se collection banate hain.
+
+**Example:**
+```ts
+// Drizzle mein table banate the
+export const todos = pgTable('todos', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  done: boolean('done').default(false),
+})
+
+// Payload mein collection banate hain
+export const Todos: CollectionConfig = {
+  slug: 'todos',
+  fields: [
+    { name: 'title', type: 'text', required: true },
+    { name: 'done', type: 'checkbox', defaultValue: false },
+  ],
+}
+```
+
+### Default Setup — Users aur Media
+
+Jab bhi koi Payload project create karta hai, toh ye **default collections** aate hain:
+
+1. **Users Collection** — Admin Panel mein login karne ke liye
+   - Jab aapne `localhost:3000/admin` pe email aur password daala, toh ye Users table mein save hua
+   - Ye Payload ka built-in hai — remove nahi karna chahiye (login ke liye chahiye)
+
+2. **Media Collection** — Files aur images upload karne ke liye
+   - Todo app ke liye iski zaroorat nahi hai
+   - Isko ignore kar sakte hain ya remove kar sakte hain
+
+### Todo App Ke Liye Kya Karna Hai?
+
+Hum Todo app banane wale hain, isliye:
+
+1. **Users collection ko chhod dena** — login ke liye chahiye
+2. **Media collection ko ignore karna** — hume iski zaroorat nahi
+3. **Apna Todo collection banana** — 1.3 mein
+
+### Code Update — Todo App Ke Liye
 
 ```ts
-import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import path from 'path'
+import { buildConfig } from 'payload'
+import { fileURLToPath } from 'url'
+import sharp from 'sharp'
+
+// Default collections ko import karna (Users aur Media dono chahiye)
+import { Users } from './collections/Users'
+import { Media } from './collections/Media'
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
 
 export default buildConfig({
+  admin: {
+    user: Users.slug,  // ← Users collection se login hoga
+    importMap: {
+      baseDir: path.resolve(dirname),
+    },
+  },
+  collections: [Users, Media],  // ← Todo collection 1.3 mein add karenge
+  editor: lexicalEditor(),
+  secret: process.env.PAYLOAD_SECRET || '',
+  typescript: {
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URI,
+      connectionString: process.env.DATABASE_URL || '',
     },
   }),
-  collections: [],    // ← yahan collections aayenge
-  secret: process.env.PAYLOAD_SECRET,
+  sharp,
+  plugins: [],
 })
 ```
 
-**`buildConfig`** — Payload ki main config function.
+**Har Line Ka Matlab (Simple):**
 
-**`postgresAdapter`** — PostgreSQL ke liye adapter — Neon connection string yahan jaati hai.
-
-**`collections: []`** — abhi khaali — Todo collection yahan add karenge.
+- `buildConfig` — Payload ki main setting function
+- `admin` — Admin Panel ki setting (kaun login kar sakta hai)
+- `collections: [Users, Media]` — Default collections (Todo 1.3 mein add karenge)
+- `editor: lexicalEditor()` — Text editor (jaise rich text editor)
+- `secret` — Security ke liye password
+- `typescript` — TypeScript types generate karne ki setting
+- `db: postgresAdapter` — Database connection (PostgreSQL)
+- `sharp` — Image processing ke liye
+- `plugins: []` — Extra features add karne ke liye (abhi khaali)
 
 > *"Drizzle mein `db/index.ts` mein connection string pass ki thi — yahan `payload.config.ts` mein ho raha hai — same idea alag jagah."*
 
 Bilkul.
+
+### Agla Step — 1.3 Mein
+
+**Phase 1.3** — Hum apna **Todo collection** banayenge aur `payload.config.ts` mein add karenge:
+
+```ts
+collections: [Users, Media, Todo],  // ← Todo collection 1.3 mein add karenge
+```
+
+Abhi ke liye default setup maintain karo — Users aur Media ke saath!
 
 ---
 

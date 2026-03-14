@@ -74,15 +74,19 @@ export const Todos: CollectionConfig = {
 }
 ```
 
-**`slug`** — collection ka URL identifier:
+**`slug`** — collection ka identifier jo database table aur API route dono banata hai:
 
 ```
-slug: 'todos'  →  /api/todos  — yeh URL ban jaayega automatically
+slug: 'todos'  →  Database table: todos  +  API route: /api/todos
 ```
 
-> *"Drizzle mein table naam `drizzle_todos` tha — yahan `slug` hai — same idea alag naam."*
+> *"Drizzle mein table ka naam aur API route alag-alag define karna padta tha — yahan `slug` se dono automatically ban jaate hain."*
 
 Bilkul.
+
+---
+
+**Note:** Drizzle mein hum explicitly `id: serial('id').primaryKey()` banate the, lekin Payload mein har collection ke liye automatically ek `id` field create ho jaata hai - hume manually nahi banana padta.
 
 ---
 
@@ -152,12 +156,12 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI,
     },
   }),
-  collections: [Todos],    // ← yahan add karo
+  collections: [Users, Media, Todos],    // ← yahan add karo
   secret: process.env.PAYLOAD_SECRET,
 })
 ```
 
-> *"Drizzle mein schema `db/index.ts` mein import kiya tha — yahan `payload.config.ts` mein — same pattern."*
+> *"Drizzle mein `db/index.ts` mein connection string pass ki thi — yahan `payload.config.ts` mein ho raha hai — same idea alag jagah."*
 
 Bilkul.
 
@@ -174,7 +178,11 @@ Payload ne automatically:
 - `/api/todos` route banayi
 - Admin Panel mein "Todos" section add kiya
 
+**Important:** Jab bhi aap server restart karte hain, Payload Neon database se automatically connect ho kar tables create kar deta hai. Aapne jo `payload.config.ts` mein `collections: [Users, Media, Todos]` define kiya hai, uske hisaab se Payload ne Neon mein `todos` table bhi create kar di hai.
+
 `localhost:3000/admin` kholo — left sidebar mein **Todos** dikh raha hai! ✅
+
+**Reality Check:** Aap Neon dashboard mein bhi dekh sakte hain ki `todos` table automatically create ho gayi hai — yeh Payload ka connection string ke through direct database mein changes karne ka result hai.
 
 ---
 
