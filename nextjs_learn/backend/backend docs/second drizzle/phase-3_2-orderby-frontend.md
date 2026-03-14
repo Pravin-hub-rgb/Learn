@@ -4,7 +4,7 @@
 
 3.1 mein:
 - SQL Editor se dummy data daala
-- GET route bana — `db.select().from(drizzle_todo)` — data aa raha hai
+- GET route bana — `db.select().from(drizzle_todos)` — data aa raha hai
 
 Ab ek problem hai — phir frontend mein list dikhayenge.
 
@@ -23,7 +23,7 @@ Kaise? — `id` bada hoga naaye todo ka — toh `id` descending order mein sort 
 Phase 1 mein yeh SQL likhi thi:
 
 ```sql
-SELECT * FROM drizzle_todo ORDER BY id DESC;
+SELECT * FROM drizzle_todos ORDER BY id DESC;
 ```
 
 Drizzle mein `.orderBy()` se yeh hoga — par `DESC` ke liye ek helper chahiye.
@@ -50,15 +50,15 @@ Ab query mein `.orderBy()` add karo:
 ```ts
 const allTodos = await db
   .select()
-  .from(drizzle_todo)
-  .orderBy(desc(drizzle_todo.id))    // ← add karo
+  .from(drizzle_todos)
+  .orderBy(desc(drizzle_todos.id))    // ← add karo
 ```
 
-**`.orderBy(desc(drizzle_todo.id))` tod ke:**
+**`.orderBy(desc(drizzle_todos.id))` tod ke:**
 
 ```
 .orderBy(                    ← "is order mein sort karo"
-  desc(drizzle_todo.id)      ← "drizzle_todo ka id column — descending"
+  desc(drizzle_todos.id)     ← "drizzle_todos ka id column — descending"
 )
 ```
 
@@ -69,15 +69,15 @@ const allTodos = await db
 ```ts
 import { NextResponse } from 'next/server'
 import { db } from '@/db'
-import { drizzle_todo } from '@/db/schema'
+import { drizzle_todos } from '@/db/schema'
 import { desc } from 'drizzle-orm'          // ← add kiya
 
 export async function GET() {
   try {
     const allTodos = await db
       .select()
-      .from(drizzle_todo)
-      .orderBy(desc(drizzle_todo.id))        // ← add kiya
+      .from(drizzle_todos)
+      .orderBy(desc(drizzle_todos.id))        // ← add kiya
 
     return NextResponse.json(allTodos)
   } catch (error) {
@@ -160,29 +160,135 @@ export default function HomePage() {
 
 `todos` — array mein saare todos rahenge.
 
-`loading` — `true` hai jab data aa raha ho — tab loader dikhao.
+`loading` — `true` se start hoga — data aa jaaye tab `false` karo — tab loader hatega.
 
 ---
 
 Ab **fetchTodos** function likho — API se data lao — `useEffect` se call karo:
 
-```tsx
-useEffect(() => {
-  fetchTodos()
-}, [])
+Pehle function define karo — phir `useEffect` mein call karo — order matter karta hai:
 
+```tsx
 async function fetchTodos() {
   try {
     const res = await fetch('/api/todos')
     const data: Todo[] = await res.json()
     setTodos(data)
-    setLoading(false)
   } catch (error) {
     console.error('Fetch error:', error)
-    setLoading(false)
+  }
+}
+
+useEffect(() => {
+  fetchTodos()
+}, [])
+```
+
+Yeh kaam karta hai — par ek problem hai.
+
+`loading` kabhi `false` nahi hoga — spinner hamesha ghoomta rahega.
+
+Toh `setLoading(false)` dono jagah likhein — try mein bhi, catch mein bhi?
+
+```tsx
+async function fetchTodos() {
+  try {
+    const res = await fetch('/api/todos')
+    const data: Todo[] = await res.json()
+    setTodos(data)
+    setLoading(false)    // ← try mein
+  } catch (error) {
+    console.error('Fetch error:', error)
+    setLoading(false)    // ← catch mein bhi
   }
 }
 ```
+
+Kaam karta hai — par **repetition** ho gayi — ek hi kaam do jagah.
+
+Aur soch — baad mein aur bhi async functions aayenge — har jagah yahi pattern repeat karna padega? Nahi chahiye.
+
+**Iska solution hai — `finally`.**
+
+### `finally` Kya Hota Hai?
+
+```
+try     → koshish karo
+catch   → kuch fail hua — yahan aao
+finally → chahe try chale ya catch — HAMESHA chalega
+```
+
+Seedha example:
+
+```ts
+try {
+  // data fetch kiya — ya kuch aur
+} catch (error) {
+  // kuch fail hua
+} finally {
+  // yeh dono cases mein chalega
+  // chahe data aaya ho — chahe error aaya ho
+}
+```
+
+`setLoading(false)` hamesha hona chahiye — chahe fetch succeed kare ya fail — toh `finally` perfect jagah hai:
+
+```tsx
+async function fetchTodos() {
+  try {
+    const res = await fetch('/api/todos')
+    const data: Todo[] = await res.json()
+    setTodos(data)
+  } catch (error) {
+    console.error('Fetch error:', error)
+  } finally {
+    setLoading(false)    // ← ek jagah — hamesha chalega
+  }
+}
+```
+
+Clean — ek jagah — koi repetition nahi. ✅
+
+---
+
+## `finally` Kya Hota Hai?
+
+```
+try     → koshish karo
+catch   → kuch fail hua — yahan aao
+finally → chahe try chale ya catch — HAMESHA chalega
+```
+
+Seedha example:
+
+```ts
+try {
+  // data fetch kiya — ya kuch aur
+} catch (error) {
+  // kuch fail hua
+} finally {
+  // yeh dono cases mein chalega
+  // chahe data aaya ho — chahe error aaya ho
+}
+```
+
+`setLoading(false)` hamesha hona chahiye — chahe fetch succeed kare ya fail — toh `finally` perfect jagah hai:
+
+```tsx
+async function fetchTodos() {
+  try {
+    const res = await fetch('/api/todos')
+    const data: Todo[] = await res.json()
+    setTodos(data)
+  } catch (error) {
+    console.error('Fetch error:', error)
+  } finally {
+    setLoading(false)    // ← ek jagah — hamesha chalega
+  }
+}
+```
+
+Clean — ek jagah — koi repetition nahi. ✅
 
 ---
 
@@ -234,21 +340,21 @@ export default function HomePage() {
   const [todos, setTodos] = useState<Todo[]>([])
   const [loading, setLoading] = useState<boolean>(true)
 
-  useEffect(() => {
-    fetchTodos()
-  }, [])
-
   async function fetchTodos() {
     try {
       const res = await fetch('/api/todos')
       const data: Todo[] = await res.json()
       setTodos(data)
-      setLoading(false)
     } catch (error) {
       console.error('Fetch error:', error)
+    } finally {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetchTodos()
+  }, [])
 
   return (
     <div className="max-w-md mx-auto p-8">
@@ -281,7 +387,8 @@ export default function HomePage() {
 
 ✅ Problem — default order sahi nahi — naaya todo upar nahi aata  
 ✅ `desc` — drizzle-orm se — descending — bada id pehle  
-✅ `.orderBy(desc(drizzle_todo.id))` — ORDER BY id DESC  
+✅ `.orderBy(desc(drizzle_todos.id))` — ORDER BY id DESC  
+✅ `finally` — chahe try chale ya catch — hamesha chalega — `setLoading(false)` ek jagah  
 ✅ Frontend — pehle fake UI — phir interface — phir states — phir fetch — phir real list  
 
 ---

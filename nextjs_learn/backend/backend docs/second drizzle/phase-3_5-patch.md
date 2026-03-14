@@ -66,6 +66,29 @@ const id = parseInt(params.id)
 //   "1" (string) → 1 (number)
 ```
 
+### Kyun Convert Karna Padta Hai?
+
+**JavaScript mein comparison strict hota hai:**
+- `1 === 1` → `true` (number === number)
+- `"1" === 1` → `false` (string !== number)
+- `1 == 1` → `true` (loose comparison, but not recommended)
+
+**Database mein bhi strict matching hota hai:**
+- Database column `id` number type ka hai
+- Agar hum `"1"` (string) pass karenge, toh database match nahi karega
+- Isliye `parseInt()` se string ko number mein convert karna zaroori hai
+
+### parseInt() Kaise Kaam Karta Hai?
+
+```javascript
+parseInt("1")     // → 1
+parseInt("123")   // → 123
+parseInt("1abc")  // → 1 (numbers ke baad kuch bhi ignore)
+parseInt("abc")   // → NaN (not a number)
+```
+
+**Error handling ke liye hum check karenge ki agar NaN aaye toh kya karna hai.**
+
 ---
 
 ## PATCH Route Likhna Shuru Karo
@@ -76,7 +99,7 @@ Kya karna hai? — Specific todo update karna — `db` aur table chahiye — imp
 
 ```ts
 import { db } from '@/db'
-import { drizzle_todo } from '@/db/schema'
+import { drizzle_todos } from '@/db/schema'
 ```
 
 ---
@@ -88,19 +111,33 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const id = parseInt(params.id)
+  // Next.js 16+ mein params ek Promise hai, isliye await karna padta hai
+  const paramsValue = await params;
+  const id = parseInt(paramsValue.id)
   const body = await request.json()
 }
 ```
 
 **`{ params }: { params: { id: string } }`** — Next.js dynamic route mein URL ki value `params` se milti hai — second argument mein aati hai. TypeScript type — `params` object hai — `id` string hai.
 
+**Important:** Next.js 16+ mein `params` ek **Promise** hai, isliye `params.id` ko directly access nahi kiya ja sakta. Pehle `params` ko `await` karna padta hai:
+
+```ts
+const paramsValue = await params;  // ← params ko await karna zaroori hai
+const id = parseInt(paramsValue.id);  // ← ab id access kar sakte hain
+```
+
+**Kyun yeh zaroori hai?**
+- Next.js 16+ mein dynamic route parameters Promise return karte hain
+- `params.id` ko directly access karne ki koshish karne par error aata hai
+- `params` ko `await` karke hi `id` access kiya ja sakta hai
+
 `NextRequest` chahiye — body padhni hai — import karo:
 
 ```ts
 import { NextRequest } from 'next/server'
 import { db } from '@/db'
-import { drizzle_todo } from '@/db/schema'
+import { drizzle_todos } from '@/db/schema'
 ```
 
 ---
@@ -112,7 +149,7 @@ Specific row update karni hai — `WHERE id = ?` chahiye.
 Drizzle mein WHERE condition ke liye `eq` function hota hai — `drizzle-orm` se:
 
 ```
-eq(drizzle_todo.id, 1)   ←   drizzle_todo.id = 1
+eq(drizzle_todos.id, 1)   ←   drizzle_todos.id = 1
 ```
 
 `eq` = equal. Import karo jab zaroorat padi:
@@ -125,25 +162,25 @@ Ab query:
 
 ```ts
 const updated = await db
-  .update(drizzle_todo)
+  .update(drizzle_todos)
   .set({ done: body.done })
-  .where(eq(drizzle_todo.id, id))
+  .where(eq(drizzle_todos.id, id))
   .returning()
 ```
 
 **Tod ke:**
 
 ```
-db.update(drizzle_todo)            ← "drizzle_todo table update karo"
+db.update(drizzle_todos)            ← "drizzle_todos table update karo"
   .set({ done: body.done })        ← "done column yeh value set karo"
-  .where(eq(drizzle_todo.id, id))  ← "sirf jiska id match kare"
+  .where(eq(drizzle_todos.id, id))  ← "sirf jiska id match kare"
   .returning()                     ← "updated row wapas do"
 ```
 
 Phase 1 wali SQL:
 
 ```sql
-UPDATE drizzle_todo SET done = true WHERE id = 1;
+UPDATE drizzle_todos SET done = true WHERE id = 1;
 ```
 
 `.returning()` yahan bhi kyun? — PostgreSQL mein UPDATE ke baad bhi row automatically wapas nahi aati — same INSERT wali baat.
@@ -173,7 +210,7 @@ return NextResponse.json(updated[0])
 import { NextResponse } from 'next/server'
 import { NextRequest } from 'next/server'
 import { db } from '@/db'
-import { drizzle_todo } from '@/db/schema'
+import { drizzle_todos } from '@/db/schema'
 import { eq } from 'drizzle-orm'
 
 export async function PATCH(
@@ -181,13 +218,15 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = parseInt(params.id)
+    // Next.js 16+ mein params ek Promise hai, isliye await karna padta hai
+    const paramsValue = await params;
+    const id = parseInt(paramsValue.id)
     const body = await request.json()
 
     const updated = await db
-      .update(drizzle_todo)
+      .update(drizzle_todos)
       .set({ done: body.done })
-      .where(eq(drizzle_todo.id, id))
+      .where(eq(drizzle_todos.id, id))
       .returning()
 
     if (!updated.length) {

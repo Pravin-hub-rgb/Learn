@@ -1,5 +1,5 @@
 {
-  "name": "drizzle-todo-app",
+  "name": "fresh-drizzle-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,16 +13,13 @@
     "drizzle-orm": "^0.45.1",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "react-fast-marquee": "^1.6.5",
-    "swiper": "^12.1.2"
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "drizzle-kit": "^0.31.9",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",

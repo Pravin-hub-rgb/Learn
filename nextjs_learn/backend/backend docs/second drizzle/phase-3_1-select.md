@@ -5,7 +5,7 @@
 Phase 2 mein poora setup ho gaya:
 
 ```
-db/schema.ts         ← drizzle_todo table define ki
+db/schema.ts         ← drizzle_todos table define ki
 db/index.ts          ← Neon connection — db export kiya
 drizzle.config.ts    ← drizzle-kit config
 npx drizzle-kit push ← table Neon mein ban gayi
@@ -17,7 +17,7 @@ Ab Phase 3 — **Todo App banayenge** — backend aur frontend saath saath — d
 
 ## Pehli Problem — Table Empty Hai
 
-`drizzle_todo` table abhi bilkul **empty** hai — koi data nahi.
+`drizzle_todos` table abhi bilkul **empty** hai — koi data nahi.
 
 Agar seedha GET route banayein aur fetch karein — toh kya dikhega?
 
@@ -36,7 +36,7 @@ Khaali array — pata nahi chalega — kaam sahi ho raha hai ya nahi.
 Neon Dashboard pe jao — **SQL Editor** kholo.
 
 ```sql
-INSERT INTO drizzle_todo (title, done) VALUES ('Pehla Drizzle Todo', false);
+INSERT INTO drizzle_todos (title, done) VALUES ('Pehla Drizzle Todo', false);
 ```
 
 Run karo — "Statement executed successfully" aayega.
@@ -44,7 +44,7 @@ Run karo — "Statement executed successfully" aayega.
 Verify karo:
 
 ```sql
-SELECT * FROM drizzle_todo;
+SELECT * FROM drizzle_todos;
 ```
 
 ```
@@ -76,7 +76,7 @@ db.delete()  ← data hatao
 
 MongoDB mein model se karte the — `Todo.find()`, `Todo.create()`.
 
-Drizzle mein `db` se karte hain — aur table variable batate hain — `db.select().from(drizzle_todo)`.
+Drizzle mein `db` se karte hain — aur table variable batate hain — `db.select().from(drizzle_todos)`.
 
 ---
 
@@ -106,11 +106,11 @@ Next.js mein `app/api/` ke andar jo files hain — woh API routes ban jaati hain
 
 Pehle socho — kya karna hai?
 
-Drizzle se saare todos fetch karne hain. `db` variable `db/index.ts` mein hai — woh import karna padega. Aur table chahiye — `drizzle_todo` — woh `db/schema.ts` mein hai.
+Drizzle se saare todos fetch karne hain. `db` variable `db/index.ts` mein hai — woh import karna padega. Aur table chahiye — `drizzle_todos` — woh `db/schema.ts` mein hai.
 
 ```ts
 import { db } from '@/db'
-import { drizzle_todo } from '@/db/schema'
+import { drizzle_todos } from '@/db/schema'
 ```
 
 **`@/db` kya hai?**
@@ -120,9 +120,9 @@ import { drizzle_todo } from '@/db/schema'
 @/db  ← matlab todo-drizzle/db/index.ts
 ```
 
-**`@/db/schema` se `drizzle_todo` kyun?**
+**`@/db/schema` se `drizzle_todos` kyun?**
 
-`db/schema.ts` mein `export const drizzle_todo = pgTable(...)` tha — wahi table variable — Drizzle ko batana padta hai "kaunsi table pe kaam karna hai."
+`db/schema.ts` mein `export const drizzle_todos = pgTable(...)` tha — wahi table variable — Drizzle ko batana padta hai "kaunsi table pe kaam karna hai."
 
 ---
 
@@ -130,7 +130,7 @@ Ab GET function banao:
 
 ```ts
 import { db } from '@/db'
-import { drizzle_todo } from '@/db/schema'
+import { drizzle_todos } from '@/db/schema'
 
 export async function GET() {
 
@@ -149,22 +149,22 @@ Ab andar query likho:
 export async function GET() {
   const allTodos = await db
     .select()
-    .from(drizzle_todo)
+    .from(drizzle_todos)
 }
 ```
 
-**`db.select().from(drizzle_todo)` tod ke:**
+**`db.select().from(drizzle_todos)` tod ke:**
 
 ```
 db                       ← Drizzle instance
   .select()              ← "SELECT karo" — saare columns
-  .from(drizzle_todo)    ← "drizzle_todo table se"
+  .from(drizzle_todos)    ← "drizzle_todos table se"
 ```
 
 Phase 1 wali SQL:
 
 ```sql
-SELECT * FROM drizzle_todo;
+SELECT * FROM drizzle_todos;
 ```
 
 Drizzle ne yeh SQL khud likhi — tu nahi — yahi ORM ka fayda.
@@ -184,7 +184,7 @@ Import karo:
 ```ts
 import { NextResponse } from 'next/server'
 import { db } from '@/db'
-import { drizzle_todo } from '@/db/schema'
+import { drizzle_todos } from '@/db/schema'
 ```
 
 Ab return karo:
@@ -193,7 +193,7 @@ Ab return karo:
 export async function GET() {
   const allTodos = await db
     .select()
-    .from(drizzle_todo)
+    .from(drizzle_todos)
 
   return NextResponse.json(allTodos)
 }
@@ -208,7 +208,7 @@ export async function GET() {
   try {
     const allTodos = await db
       .select()
-      .from(drizzle_todo)
+      .from(drizzle_todos)
 
     return NextResponse.json(allTodos)
   } catch (error) {
@@ -239,13 +239,13 @@ HTTP status code — response ke saath jaata hai — browser ko batata hai reque
 ```ts
 import { NextResponse } from 'next/server'
 import { db } from '@/db'
-import { drizzle_todo } from '@/db/schema'
+import { drizzle_todos } from '@/db/schema'
 
 export async function GET() {
   try {
     const allTodos = await db
       .select()
-      .from(drizzle_todo)
+      .from(drizzle_todos)
 
     return NextResponse.json(allTodos)
   } catch (error) {
@@ -281,10 +281,10 @@ Data aa raha hai! ✅
 
 ## Aaj Ka Summary
 
-✅ `drizzle_todo` empty thi — SQL Editor se dummy data daala  
+✅ `drizzle_todos` empty thi — SQL Editor se dummy data daala  
 ✅ `db` — Drizzle instance — queries yahan se chalti hain  
 ✅ `app/api/todos/route.ts` — GET route  
-✅ `db.select().from(drizzle_todo)` — SELECT * FROM drizzle_todo  
+✅ `db.select().from(drizzle_todos)` — SELECT * FROM drizzle_todos  
 ✅ `NextResponse` — data aa gaya — tab import kiya — browser ko bhejna tha  
 ✅ `try/catch` — database call fail ho sakti hai  
 ✅ HTTP status codes — 200, 201, 400, 404, 500  

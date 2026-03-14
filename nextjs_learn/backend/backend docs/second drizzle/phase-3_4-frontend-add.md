@@ -82,7 +82,7 @@ async function addTodo() {
 
 ---
 
-Response mein naya todo aayega — `newTodo[0]` wala — list mein add karo aur input clear karo:
+Response mein naya todo aayega — list mein add karo aur input clear karo:
 
 ```ts
 async function addTodo() {
@@ -100,7 +100,32 @@ async function addTodo() {
 }
 ```
 
-**`[newTodo, ...todos]`** — naaya todo pehle — baaki purane saath.
+### Samjhein Array Spread Syntax:
+
+**`[newTodo, ...todos]`** - Yeh ek naya array banata hai:
+- `newTodo` - Naya todo sabse pehle aayega
+- `...todos` - Purane todos ko spread karke add karta hai
+
+**Example:**
+```javascript
+// Pehle todos array:
+todos = [
+  { id: 2, title: "Todo 2", done: false },
+  { id: 1, title: "Todo 1", done: false }
+]
+
+// Naya todo:
+newTodo = { id: 3, title: "Todo 3", done: false }
+
+// Result:
+setTodos([newTodo, ...todos]) = [
+  { id: 3, title: "Todo 3", done: false },  // Naya sabse upar
+  { id: 2, title: "Todo 2", done: false },
+  { id: 1, title: "Todo 1", done: false }
+]
+```
+
+**Kyun pehle?** - User ne abhi add kiya hai, toh woh top par dikhega, jaise hum chahte hain!
 
 ---
 
@@ -125,6 +150,8 @@ async function addTodo() {
   }
 }
 ```
+
+`addTodo` mein `finally` nahi lagaya — yahan loading state nahi hai — `setInput('')` sirf success pe hona chahiye, error pe nahi.
 
 ---
 
@@ -177,21 +204,21 @@ export default function HomePage() {
   const [loading, setLoading] = useState<boolean>(true)
   const [input, setInput] = useState<string>('')
 
-  useEffect(() => {
-    fetchTodos()
-  }, [])
-
   async function fetchTodos() {
     try {
       const res = await fetch('/api/todos')
       const data: Todo[] = await res.json()
       setTodos(data)
-      setLoading(false)
     } catch (error) {
       console.error('Fetch error:', error)
-      setLoading(false)
+    } finally {
+      setLoading(false)    // ← chahe try chale ya catch — hamesha
     }
   }
+
+  useEffect(() => {
+    fetchTodos()
+  }, [])
 
   async function addTodo() {
     if (!input.trim()) return
@@ -262,6 +289,7 @@ Kuch likho — Add dabao — todo list mein aa jaayega! ✅
 ✅ `JSON.stringify` — object ko JSON string mein convert karo  
 ✅ `Content-Type: application/json` — server ko batao JSON aa raha hai  
 ✅ `[newTodo, ...todos]` — naaya todo upar  
+✅ `fetchTodos` mein `finally` — 3.2 se carry forward  
 ✅ JSX — input box + button — `value`, `onChange`, `onKeyDown`  
 
 ---
