@@ -50,9 +50,38 @@ async function addTodo() {
 }
 ```
 
+**Headers aur JSON.stringify samajhna:**
+Jab hum server ko data bhejte hain todo add karne ke liye, toh POST route pe jata hai. Is process mein hum kuch cheezein define karte hain:
+
+**Complete Flow:**
+1. User input box mein todo likhta hai
+2. Add button dabata hai
+3. `addTodo()` function chalta hai
+4. Frontend pe hum JavaScript object banate hain: `{ title: input, done: false }`
+5. **`JSON.stringify()`** - Object ko JSON string mein convert karta hai: `'{"title":"Todo Name","done":false}'`
+   - Server ko JSON string format mein data chahiye hota hai
+   - Agar hum object bhejenge toh server samajh nahi payega
+6. `fetch()` se server ko request bheji jati hai
+7. **`method: 'POST'`** - Batata hai ki hum data add kar rahe hain (POST = create)
+8. **`headers: { 'Content-Type': 'application/json' }`** - Server ko batata hai ki hum JSON format mein data bhej rahe hain
+   - **`'Content-Type'`** - Batata hai ki hum kis type ka content bhej rahe hain
+   - **`'application/json'`** - Batata hai ki hum JSON format mein data bhej rahe hain
+   - Server ko pata chalta hai ki data JSON format mein hai, isliye JSON parse kar sakta hai
+9. Server receive karta hai aur JSON string ko parse karke database mein save kar deta hai
+
+**Key Points:**
+- Server ko sirf JSON format mein hi data accept karna aata hai
+- Isliye `JSON.stringify()` use karte hain object ko JSON string mein convert karne ke liye
+- `Content-Type: application/json` se server ko batata hai ki hum JSON format mein data bhej rahe hain
+
 > *"`done: false` bhi bheja — Drizzle mein nahi bheja tha — default tha schema mein. Payload mein?"*
 
-Payload mein bhi `defaultValue: false` hai collection mein — toh nahi bhejna zaroori — par bhejna safe hai.
+**`done: false` kyu bhej rahe hain jabki default set hai?**
+- Collection mein humne `defaultValue: false` set kiya hai
+- Lekin frontend se explicitly `done: false` bhejna safe practice hai
+- Kabhi-kabhi server-side validation ya client-side logic mein confusion ho sakta hai
+- Explicit value bhejne se clear ho jaata hai ki hum kya chahte hain
+- Best practice: Agar default value hai, phir bhi explicitly bhejna better hai
 
 Response se naya todo nikalo:
 
