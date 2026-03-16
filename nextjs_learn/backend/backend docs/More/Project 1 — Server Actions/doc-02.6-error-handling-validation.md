@@ -53,31 +53,9 @@ Ab basic error handling samjhte hain:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
-// "Ab error handling ko samjhte hain — iske liye try-catch chahiye"
-export async function POST(req: Request) {
-  try {
-    // "Ab database mein data create karne ki koshish karte hain"
-    const todo = await req.json()
-    const createdTodo = await prisma.todo.create({
-      data: {
-        title: todo.title,
-        done: false
-      }
-    })
-
-    // "Ab response bana kar bhejte hain"
-    return NextResponse.json(createdTodo)
-  } catch (error) {
-    // "Ab error ko handle karte hain"
-    return NextResponse.json(
-      { error: 'Something went wrong' },
-      { status: 500 }
-    )
-  }
-}
+// "Ab basic error handling ko samjhte hain — iske liye try-catch chahiye"
+// "try-catch se error ko handle kar sakte hain"
+// "Error handling ke liye zaroori hai"
 ```
 
 **Kyun yeh structure?**
@@ -93,44 +71,9 @@ Ab specific error handling samjho:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
 // "Ab specific errors ko handle karte hain"
-export async function POST(req: Request) {
-  try {
-    const todo = await req.json()
-    const createdTodo = await prisma.todo.create({
-      data: {
-        title: todo.title,
-        done: false
-      }
-    })
-    return NextResponse.json(createdTodo)
-  } catch (error) {
-    if (error instanceof PrismaClientKnownRequestError) {
-      // "Database specific errors"
-      if (error.code === 'P2002') {
-        return NextResponse.json(
-          { error: 'Duplicate entry' },
-          { status: 400 }
-        )
-      }
-    } else if (error instanceof PrismaClientUnknownRequestError) {
-      // "Unknown errors"
-      return NextResponse.json(
-        { error: 'Unknown error' },
-        { status: 500 }
-      )
-    } else {
-      // "General errors"
-      return NextResponse.json(
-        { error: 'Something went wrong' },
-        { status: 500 }
-      )
-    }
-  }
-}
+// "PrismaClientKnownRequestError se database errors handle karte hain"
+// "PrismaClientUnknownRequestError se unknown errors handle karte hain"
 ```
 
 **Specific errors:**
@@ -146,43 +89,9 @@ Ab validation handling samjho:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
 // "Ab validation ko handle karte hain"
-export async function POST(req: Request) {
-  try {
-    const todo = await req.json()
-
-    // "Ab validation check karte hain"
-    if (!todo.title) {
-      return NextResponse.json(
-        { error: 'Title is required' },
-        { status: 400 }
-      )
-    }
-
-    if (todo.title.length > 100) {
-      return NextResponse.json(
-        { error: 'Title too long' },
-        { status: 400 }
-      )
-    }
-
-    const createdTodo = await prisma.todo.create({
-      data: {
-        title: todo.title,
-        done: false
-      }
-    })
-    return NextResponse.json(createdTodo)
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Something went wrong' },
-      { status: 500 }
-    )
-  }
-}
+// "Validation check karke error handle karte hain"
+// "Required fields check karna zaroori hai"
 ```
 
 **Validation checks:**
@@ -198,32 +107,9 @@ Ab error response structure samjho:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
 // "Ab error response ko standardize karte hain"
-export async function POST(req: Request) {
-  try {
-    const todo = await req.json()
-    const createdTodo = await prisma.todo.create({
-      data: {
-        title: todo.title,
-        done: false
-      }
-    })
-    return NextResponse.json(createdTodo)
-  } catch (error) {
-    // "Ab standardized error response bana rahe hain"
-    const errorResponse = {
-      error: {
-        message: 'Something went wrong',
-        code: 'INTERNAL_ERROR',
-        details: error.message
-      }
-    }
-    return NextResponse.json(errorResponse, { status: 500 })
-  }
-}
+// "Standardized error response bana kar bhejte hain"
+// "Error ko proper format mein bhejte hain"
 ```
 
 **Standardized structure:**
@@ -239,25 +125,75 @@ Ab error logging samjho:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
 // "Ab error ko log karke dekhna hai"
+// "Error ko console.error se log karte hain"
+// "Error details ko track karte hain"
+```
+
+**Logging:**
+- **console.error** - Error log karna
+- **Error details** - Error details log karna
+- **Monitoring** - Error monitoring
+
+---
+
+## Step 6: Complete Error Handling
+
+Ab complete error handling banate hain:
+
+```typescript
+// Pehle kaam karo
+// "Ab complete error handling banate hain"
+// "Sab steps ko mila kar ek function banate hain"
+// "Validation, error handling, logging sab add karte hain"
+```
+
+**Complete function:**
+```typescript
 export async function POST(req: Request) {
   try {
+    // Data parse karo
     const todo = await req.json()
+
+    // Validation check karo
+    if (!todo.title) {
+      return NextResponse.json(
+        { error: 'Title is required' },
+        { status: 400 }
+      )
+    }
+
+    if (todo.title.length > 100) {
+      return NextResponse.json(
+        { error: 'Title too long' },
+        { status: 400 }
+      )
+    }
+
+    // Database mein create karo
     const createdTodo = await prisma.todo.create({
       data: {
         title: todo.title,
         done: false
       }
     })
+
+    // Response banao
     return NextResponse.json(createdTodo)
   } catch (error) {
-    // "Ab error ko log kar rahe hain"
+    // Error ko log karo
     console.error('Error creating todo:', error)
 
-    // "Ab response bana rahe hain"
+    // Error handle karo
+    if (error instanceof PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        return NextResponse.json(
+          { error: 'Duplicate entry' },
+          { status: 400 }
+        )
+      }
+    }
+
     return NextResponse.json(
       { error: 'Something went wrong' },
       { status: 500 }
@@ -265,11 +201,6 @@ export async function POST(req: Request) {
   }
 }
 ```
-
-**Logging:**
-- **console.error** - Error log karna
-- **Error details** - Error details log karna
-- **Monitoring** - Error monitoring
 
 ---
 

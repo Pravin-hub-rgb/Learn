@@ -53,63 +53,79 @@ Ab basic display structure banate hain:
 
 ```typescript
 // Pehle kaam karo
-import { useState, useEffect } from 'react'
-
 // "Ab display ka structure banate hain"
-export default function TodoList() {
-  // "Ab todos ko manage karne ke liye useState use karte hain"
-  const [todos, setTodos] = useState([])
-
-  // "Ab todos ko fetch karne ke liye useEffect use karte hain"
-  useEffect(() => {
-    async function fetchTodos() {
-      const response = await fetch('/api/todos')
-      const data = await response.json()
-      setTodos(data)
-    }
-    fetchTodos()
-  }, [])
-
-  return (
-    <div>
-      <h2>Todos</h2>
-      <ul>
-        {todos.map(todo => (
-          <li key={todo.id}>
-            {todo.title} - {todo.done ? 'Done' : 'Pending'}
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
+// "Display ke liye useState use karte hain"
+// "Todos ko manage karne ke liye useState zaroori hai"
 ```
 
 **Kyun yeh structure?**
 - **useState** - Todos ko manage karne ke liye
+- **todos** - Todos ko store karne ke liye
+- **setTodos** - Data ko update karne ke liye
+
+---
+
+## Step 2: Data Fetch Karo
+
+Ab data fetch karte hain:
+
+```typescript
+// Pehle kaam karo
+// "Ab data fetch karna hai — iske liye useEffect use karte hain"
+// "useEffect se data fetch kar sakte hain"
+// "Data ko await karna padta hai"
+```
+
+**Kyun yeh approach?**
 - **useEffect** - Data fetch karne ke liye
-- **map** - Todos ko display karne ke liye
+- **fetch** - Data ko server se lana
+- **await** - Async operation handle karna
 
 ---
 
-## Step 2: Display with Server Actions
+## Step 3: Data Display Karo
 
-Ab display with Server Actions banate hain:
+Ab data display karte hain:
 
 ```typescript
 // Pehle kaam karo
-import { useState, useEffect } from 'react'
+// "Ab data display karna hai"
+// "Todos ko map karke display karte hain"
+// "Har todo ka alag li element banata hai"
+```
 
-// "Ab display ko Server Actions ke saath integrate karte hain"
+**Kyun yeh syntax?**
+- **map** - Data ko iterate karne ke liye
+- **key** - Unique identifier ke liye
+- **li element** - List item ke liye
+
+---
+
+## Step 4: Complete Display Function
+
+Ab complete function banate hain:
+
+```typescript
+// Pehle kaam karo
+// "Ab complete function banate hain"
+// "Sab steps ko mila kar ek function banate hain"
+// "Error handling bhi add karte hain"
+```
+
+**Complete function:**
+```typescript
 export default function TodoList() {
   const [todos, setTodos] = useState([])
 
-  // "Ab todos ko fetch karne ke liye useEffect use karte hain"
   useEffect(() => {
     async function fetchTodos() {
-      const response = await fetch('/api/todos')
-      const data = await response.json()
-      setTodos(data)
+      try {
+        const response = await fetch('/api/todos')
+        const data = await response.json()
+        setTodos(data)
+      } catch (error) {
+        console.error('Error fetching todos:', error)
+      }
     }
     fetchTodos()
   }, [])
@@ -121,9 +137,6 @@ export default function TodoList() {
         {todos.map(todo => (
           <li key={todo.id}>
             {todo.title} - {todo.done ? 'Done' : 'Pending'}
-            <button onClick={() => toggleTodo(todo.id)}>
-              {todo.done ? 'Undo' : 'Done'}
-            </button>
           </li>
         ))}
       </ul>
@@ -131,104 +144,56 @@ export default function TodoList() {
   )
 }
 ```
-
-**Advantage:**
-- **Type safety** - TypeScript se type checking
-- **Error handling** - Error handle karna
-- **Simple syntax** - API routes se simple
 
 ---
 
-## Step 3: Display with Toggle Functionality
+## Step 5: Toggle Functionality Add Karo
 
-Ab toggle functionality samjho:
+Ab toggle functionality add karte hain:
 
 ```typescript
 // Pehle kaam karo
-import { useState, useEffect } from 'react'
-
-// "Ab toggle functionality ko samjhte hain"
-export default function TodoList() {
-  const [todos, setTodos] = useState([])
-
-  // "Ab todos ko fetch karne ke liye useEffect use karte hain"
-  useEffect(() => {
-    async function fetchTodos() {
-      const response = await fetch('/api/todos')
-      const data = await response.json()
-      setTodos(data)
-    }
-    fetchTodos()
-  }, [])
-
-  // "Ab toggle function banate hain"
-  async function toggleTodo(id: string) {
-    try {
-      const response = await fetch(`/api/todos/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ done: !todos.find(t => t.id === id)?.done })
-      })
-
-      const updatedTodo = await response.json()
-      setTodos(todos.map(todo =>
-        todo.id === id ? updatedTodo : todo
-      ))
-    } catch (error) {
-      console.error('Error toggling todo:', error)
-    }
-  }
-
-  return (
-    <div>
-      <h2>Todos</h2>
-      <ul>
-        {todos.map(todo => (
-          <li key={todo.id}>
-            {todo.title} - {todo.done ? 'Done' : 'Pending'}
-            <button onClick={() => toggleTodo(todo.id)}>
-              {todo.done ? 'Undo' : 'Done'}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
+// "Ab toggle functionality add karte hain"
+// "Toggle ke liye PATCH request use karte hain"
+// "Status ko update karne ke liye PATCH method use karte hain"
 ```
 
-**Toggle functionality:**
+**Toggle approach:**
 - **PATCH request** - Status update karne ke liye
+- **toggleTodo function** - Status ko toggle karne ke liye
 - **State update** - UI ko update karne ke liye
-- **Error handling** - Error handle karne ke liye
 
 ---
 
-## Step 4: Display with Delete Functionality
+## Step 6: Complete Display with Toggle
 
-Ab delete functionality samjho:
+Ab complete display with toggle banate hain:
 
 ```typescript
 // Pehle kaam karo
-import { useState, useEffect } from 'react'
+// "Ab complete display with toggle banate hain"
+// "Sab steps ko mila kar ek function banate hain"
+// "Toggle functionality, error handling, sab add karte hain"
+```
 
-// "Ab delete functionality ko samjhte hain"
+**Complete function:**
+```typescript
 export default function TodoList() {
   const [todos, setTodos] = useState([])
 
-  // "Ab todos ko fetch karne ke liye useEffect use karte hain"
   useEffect(() => {
     async function fetchTodos() {
-      const response = await fetch('/api/todos')
-      const data = await response.json()
-      setTodos(data)
+      try {
+        const response = await fetch('/api/todos')
+        const data = await response.json()
+        setTodos(data)
+      } catch (error) {
+        console.error('Error fetching todos:', error)
+      }
     }
     fetchTodos()
   }, [])
 
-  // "Ab toggle function banate hain"
   async function toggleTodo(id: string) {
     try {
       const response = await fetch(`/api/todos/${id}`, {
@@ -248,19 +213,6 @@ export default function TodoList() {
     }
   }
 
-  // "Ab delete function banate hain"
-  async function deleteTodo(id: string) {
-    try {
-      await fetch(`/api/todos/${id}`, {
-        method: 'DELETE'
-      })
-
-      setTodos(todos.filter(todo => todo.id !== id))
-    } catch (error) {
-      console.error('Error deleting todo:', error)
-    }
-  }
-
   return (
     <div>
       <h2>Todos</h2>
@@ -271,9 +223,6 @@ export default function TodoList() {
             <button onClick={() => toggleTodo(todo.id)}>
               {todo.done ? 'Undo' : 'Done'}
             </button>
-            <button onClick={() => deleteTodo(todo.id)}>
-              Delete
-            </button>
           </li>
         ))}
       </ul>
@@ -282,45 +231,55 @@ export default function TodoList() {
 }
 ```
 
-**Delete functionality:**
+---
+
+## Step 7: Delete Functionality Add Karo
+
+Ab delete functionality add karte hain:
+
+```typescript
+// Pehle kaam karo
+// "Ab delete functionality add karte hain"
+// "Delete ke liye DELETE request use karte hain"
+// "Data ko permanently remove karne ke liye DELETE method use karte hain"
+```
+
+**Delete approach:**
 - **DELETE request** - Data delete karne ke liye
+- **deleteTodo function** - Data ko delete karne ke liye
 - **State update** - UI ko update karne ke liye
-- **Error handling** - Error handle karne ke liye
 
 ---
 
-## Step 5: Display with Real-time Updates
+## Step 8: Complete Display with Delete
 
-Ab real-time updates samjho:
+Ab complete display with delete banate hain:
 
 ```typescript
 // Pehle kaam karo
-import { useState, useEffect } from 'react'
+// "Ab complete display with delete banate hain"
+// "Sab steps ko mila kar ek function banate hain"
+// "Delete functionality, error handling, sab add karte hain"
+```
 
-// "Ab real-time updates ko samjhte hain"
+**Complete function:**
+```typescript
 export default function TodoList() {
   const [todos, setTodos] = useState([])
 
-  // "Ab todos ko fetch karne ke liye useEffect use karte hain"
   useEffect(() => {
     async function fetchTodos() {
-      const response = await fetch('/api/todos')
-      const data = await response.json()
-      setTodos(data)
+      try {
+        const response = await fetch('/api/todos')
+        const data = await response.json()
+        setTodos(data)
+      } catch (error) {
+        console.error('Error fetching todos:', error)
+      }
     }
     fetchTodos()
   }, [])
 
-  // "Ab real-time updates ke liye polling use karte hain"
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetchTodos()
-    }, 5000) // 5 seconds
-
-    return () => clearInterval(interval)
-  }, [])
-
-  // "Ab toggle function banate hain"
   async function toggleTodo(id: string) {
     try {
       const response = await fetch(`/api/todos/${id}`, {
@@ -340,7 +299,6 @@ export default function TodoList() {
     }
   }
 
-  // "Ab delete function banate hain"
   async function deleteTodo(id: string) {
     try {
       await fetch(`/api/todos/${id}`, {
@@ -373,11 +331,6 @@ export default function TodoList() {
   )
 }
 ```
-
-**Real-time updates:**
-- **Polling** - Data ko regular interval pe fetch karna
-- **State update** - UI ko automatically update karna
-- **Error handling** - Error handle karna
 
 ---
 

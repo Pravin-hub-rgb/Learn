@@ -10,14 +10,14 @@ Ab **database kaun handle karega?**
 **Prisma kaun setup karega?**
 **PostgreSQL kaun connect karega?**
 
-Sab kuch manually karna padega — aur yeh bahut time waste karega.
+Sab kuch manually karna padega — aur yeh bahut time waste hoga.
 
 ---
 
 Yeh sirf tumhara problem nahi hai. Socho:
 
 - **WhatsApp** — agar database setup nahi hota, messages kahan store honge?
-- **Instagram** — agar backend nahi hota, likes aur comments kaun manage karega?
+- **Instagram** — agar backend nahi hota, likes aur comments kaun manage karenge?
 - **Amazon** - agar database nahi hota, cart items kahan save honge?
 
 ---

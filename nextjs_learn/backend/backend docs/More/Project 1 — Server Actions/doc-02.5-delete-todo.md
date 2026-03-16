@@ -52,161 +52,105 @@ Ab delete Server Action banate hain:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
 // "Ab delete Server Action banate hain — iske liye DELETE method chahiye"
-export async function DELETE({ params }) {
-  // "Ab database mein data delete karna hai"
-  const deletedTodo = await prisma.todo.delete({
-    where: { id: params.id }
-  })
-
-  // "Ab response bana kar bhejna hai"
-  return NextResponse.json(deletedTodo)
-}
+// "DELETE method data delete karne ke liye use hota hai"
+// "Export async function DELETE use karte hain"
 ```
 
 **Kyun yeh structure?**
 - **DELETE()** - Delete operation ke liye
-- **params.id** - Specific todo ka ID
-- **prisma.todo.delete()** - Database mein data delete karta hai
-- **NextResponse.json()** - Response format karta hai
+- **Request** - Frontend se request aati hai
+- **Response** - Frontend ko response bhejte hain
 
 ---
 
-## Step 2: Delete Operation Ka Advantage
+## Step 2: Database Mein Data Delete Karo
+
+Ab database mein data delete karte hain:
+
+```typescript
+// Pehle kaam karo
+// "Ab database mein data delete karna hai — iske liye prisma use karte hain"
+// "prisma.todo.delete() se data delete hota hai"
+// "Data ko identify karne ke liye id chahiye"
+```
+
+**Kyun yeh syntax?**
+- **prisma.todo.delete()** - Data delete karta hai
+- **where: { id: params.id }** - Specific todo ko identify karta hai
+- **await** - Async operation handle karta hai
+
+---
+
+## Step 3: Response Banao
+
+Ab response banao:
+
+```typescript
+// Pehle kaam karo
+// "Ab response bana kar bhejna hai — iske liye NextResponse use karte hain"
+// "NextResponse.json() se response format hota hai"
+// "Deleted data ko bhejte hain"
+```
+
+**Kyun yeh structure?**
+- **NextResponse.json()** - Response format karta hai
+- **deletedTodo** - Deleted data ko bhejte hain
+- **Status code** - Success status bhejte hain
+
+---
+
+## Step 4: Complete Delete Function
+
+Ab complete function banate hain:
+
+```typescript
+// Pehle kaam karo
+// "Ab complete function banate hain"
+// "Sab steps ko mila kar ek function banate hain"
+// "Error handling bhi add karte hain"
+```
+
+**Complete function:**
+```typescript
+export async function DELETE({ params }) {
+  try {
+    // Database mein delete karo
+    const deletedTodo = await prisma.todo.delete({
+      where: { id: params.id }
+    })
+
+    // Response banao
+    return NextResponse.json(deletedTodo)
+  } catch (error) {
+    // Error handle karo
+    return NextResponse.json(
+      { error: 'Something went wrong' },
+      { status: 500 }
+    )
+  }
+}
+```
+
+---
+
+## Step 5: Delete Operation Ka Advantage
 
 Ab advantage samjho:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
-// "Ab delete operation ko detail se samjhte hain"
-export async function DELETE({ params }) {
-  // "Ab database mein data delete karne se pehle check karna hai"
-  try {
-    const deletedTodo = await prisma.todo.delete({
-      where: { id: params.id }
-    })
-    return NextResponse.json(deletedTodo)
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Todo not found' },
-      { status: 404 }
-    )
-  }
-}
+// "Ab advantage samjhna hai — iske liye examples chahiye"
+// "Delete operation ka advantage yeh hai ki"
+// "1. Data permanently remove ho jata hai"
+// "2. Database clean hota hai"
+// "3. Storage save hota hai"
 ```
 
 **Advantage:**
-- **Error handling** - Error handle karna
-- **Soft delete** - Data permanently delete nahi karna
-- **Type safety** - TypeScript se type checking
-
----
-
-## Step 3: Delete Operation Ka Usage
-
-Ab usage samjho:
-
-```typescript
-// Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
-// "Ab delete operation ko alag alag scenarios mein use karke dekhna hai"
-export async function DELETE({ params }) {
-  // "Scenario 1: Basic delete"
-  const deletedTodo = await prisma.todo.delete({
-    where: { id: params.id }
-  })
-  return NextResponse.json(deletedTodo)
-
-  // "Scenario 2: With soft delete"
-  const softDeletedTodo = await prisma.todo.update({
-    where: { id: params.id },
-    data: {
-      deletedAt: new Date()
-    }
-  })
-  return NextResponse.json(softDeletedTodo)
-}
-```
-
-**Scenarios:**
-- **Basic delete** - Simple delete operation
-- **Soft delete** - Data permanently delete nahi karna
-- **With timestamps** - Time tracking ke saath delete
-
----
-
-## Step 4: Delete Operation Ka Import Karne Ka Tarika
-
-Ab import kaise karte hain, samjho:
-
-```typescript
-// Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
-// "Ab alag alag files mein isko use karke dekhna hai"
-export async function DELETE({ params }) {
-  // "Ab database mein data delete kar rahe hain"
-  const deletedTodo = await prisma.todo.delete({
-    where: { id: params.id }
-  })
-
-  // "Ab response bana kar bhej rahe hain"
-  return NextResponse.json(deletedTodo)
-}
-```
-
-**Import ka pattern:**
-- **import { NextResponse }** - Next.js API routes ke liye
-- **import prisma** - Database client ke liye
-- **export async function DELETE** - Delete operation export karne ke liye
-
----
-
-## Step 5: Delete Operation Ka Testing
-
-Ab testing samjho:
-
-```typescript
-// Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
-// "Ab delete operation ko test karke dekhna hai"
-export async function DELETE({ params }) {
-  // "Test scenario 1: Valid delete"
-  try {
-    const deletedTodo = await prisma.todo.delete({
-      where: { id: params.id }
-    })
-    return NextResponse.json(deletedTodo)
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Todo not found' },
-      { status: 404 }
-    )
-  }
-
-  // "Test scenario 2: Invalid delete"
-  return NextResponse.json(
-    { error: 'Invalid delete request' },
-    { status: 400 }
-  )
-}
-```
-
-**Test scenarios:**
-- **Valid delete** - Sahi data ke saath test
-- **Invalid delete** - Galat data ke saath test
-- **Error handling** - Error handling ke saath test
+- **Permanent removal** - Data permanently remove ho jata hai
+- **Database cleanup** - Database clean hota hai
+- **Storage saving** - Storage save hota hai
 
 ---
 
@@ -214,9 +158,9 @@ export async function DELETE({ params }) {
 
 ✅ **Problem** - Bina delete ke todo kaise remove karenge?
 ✅ **Delete Todo ka importance** - Dustbin jaisa, data remove karne ke liye zaroori
-✅ **Delete operation** - DELETE method se data delete karna
-✅ **Error handling** - Error handle karna
-✅ **Testing** - Operation ko test karna
+✅ **DELETE method** - Data delete karne ke liye
+✅ **Database delete** - Prisma se data delete karna
+✅ **Response format** - Frontend ko response bhejna
 
 ---
 

@@ -52,180 +52,129 @@ Ab update Server Action banate hain:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
 // "Ab update Server Action banate hain — iske liye PATCH method chahiye"
-export async function PATCH(req: Request, { params }) {
-  // "Frontend se data aa raha hai — isko parse karna hai"
-  const todo = await req.json()
-
-  // "Ab database mein data update karna hai"
-  const updatedTodo = await prisma.todo.update({
-    where: { id: params.id },
-    data: {
-      done: todo.done
-    }
-  })
-
-  // "Ab response bana kar bhejna hai"
-  return NextResponse.json(updatedTodo)
-}
+// "PATCH method data update karne ke liye use hota hai"
+// "Export async function PATCH use karte hain"
 ```
 
 **Kyun yeh structure?**
 - **PATCH()** - Update operation ke liye
-- **params.id** - Specific todo ka ID
-- **prisma.todo.update()** - Database mein data update karta hai
+- **Request** - Frontend se data aata hai
+- **Response** - Frontend ko response bhejte hain
+
+---
+
+## Step 2: Data Parse Karo
+
+Ab data parse karte hain:
+
+```typescript
+// Pehle kaam karo
+// "Ab data ko parse karna hai — iske liye request.json() use karte hain"
+// "Frontend se data aa raha hai — isko parse karna padega"
+// "JSON format mein data aata hai"
+```
+
+**Kyun yeh approach?**
+- **request.json()** - Data ko parse karta hai
+- **JSON format** - Standard data format
+- **Async operation** - Data ko wait karna padta hai
+
+---
+
+## Step 3: Database Mein Data Update Karo
+
+Ab database mein data update karte hain:
+
+```typescript
+// Pehle kaam karo
+// "Ab database mein data update karna hai — iske liye prisma use karte hain"
+// "prisma.todo.update() se data update hota hai"
+// "Data ko object format mein pass karte hain"
+```
+
+**Kyun yeh syntax?**
+- **prisma.todo.update()** - Data update karta hai
+- **where: { id: params.id }** - Specific todo ko identify karta hai
+- **data: { done: todo.done }** - Data ko update karta hai
+
+---
+
+## Step 4: Response Banao
+
+Ab response banao:
+
+```typescript
+// Pehle kaam karo
+// "Ab response bana kar bhejna hai — iske liye NextResponse use karte hain"
+// "NextResponse.json() se response format hota hai"
+// "Updated data ko bhejte hain"
+```
+
+**Kyun yeh structure?**
 - **NextResponse.json()** - Response format karta hai
+- **updatedTodo** - Updated data ko bhejte hain
+- **Status code** - Success status bhejte hain
 
 ---
 
-## Step 2: Update Operation Ka Advantage
+## Step 5: Complete Update Function
 
-Ab advantage samjho:
+Ab complete function banate hain:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
-// "Ab update operation ko detail se samjhte hain"
-export async function PATCH(req: Request, { params }) {
-  // "Ab database mein data update karne se pehle check karna hai"
-  const todo = await req.json()
-
-  // "Ab database mein data update kar rahe hain"
-  const updatedTodo = await prisma.todo.update({
-    where: { id: params.id },
-    data: {
-      done: todo.done,
-      updatedAt: new Date()
-    }
-  })
-
-  // "Ab response bana kar bhej rahe hain"
-  return NextResponse.json(updatedTodo)
-}
+// "Ab complete function banate hain"
+// "Sab steps ko mila kar ek function banate hain"
+// "Error handling bhi add karte hain"
 ```
 
-**Advantage:**
-- **Partial update** - Sirf specific fields update karna
-- **Timestamp** - Update time track karna
-- **Type safety** - TypeScript se type checking
-
----
-
-## Step 3: Update Operation Ka Usage
-
-Ab usage samjho:
-
+**Complete function:**
 ```typescript
-// Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
-// "Ab update operation ko alag alag scenarios mein use karke dekhna hai"
 export async function PATCH(req: Request, { params }) {
-  // "Scenario 1: Basic update"
-  const todo = await req.json()
-  const updatedTodo = await prisma.todo.update({
-    where: { id: params.id },
-    data: {
-      done: todo.done
-    }
-  })
-  return NextResponse.json(updatedTodo)
+  try {
+    // Data parse karo
+    const todo = await req.json()
 
-  // "Scenario 2: With additional fields"
-  const updatedTodoWithMeta = await prisma.todo.update({
-    where: { id: params.id },
-    data: {
-      done: todo.done,
-      updatedAt: new Date(),
-      completedAt: todo.done ? new Date() : null
-    }
-  })
-  return NextResponse.json(updatedTodoWithMeta)
-}
-```
-
-**Scenarios:**
-- **Basic update** - Simple update operation
-- **With additional fields** - Extra fields ke saath update
-- **With timestamps** - Time tracking ke saath update
-
----
-
-## Step 4: Update Operation Ka Import Karne Ka Tarika
-
-Ab import kaise karte hain, samjho:
-
-```typescript
-// Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
-// "Ab alag alag files mein isko use karke dekhna hai"
-export async function PATCH(req: Request, { params }) {
-  // "Frontend se data aa raha hai — isko parse kar rahe hain"
-  const todo = await req.json()
-
-  // "Ab database mein data update kar rahe hain"
-  const updatedTodo = await prisma.todo.update({
-    where: { id: params.id },
-    data: {
-      done: todo.done
-    }
-  })
-
-  // "Ab response bana kar bhej rahe hain"
-  return NextResponse.json(updatedTodo)
-}
-```
-
-**Import ka pattern:**
-- **import { NextResponse }** - Next.js API routes ke liye
-- **import prisma** - Database client ke liye
-- **export async function PATCH** - Update operation export karne ke liye
-
----
-
-## Step 5: Update Operation Ka Testing
-
-Ab testing samjho:
-
-```typescript
-// Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
-// "Ab update operation ko test karke dekhna hai"
-export async function PATCH(req: Request, { params }) {
-  // "Test scenario 1: Valid update"
-  const todo = await req.json()
-  if (todo.done !== undefined) {
+    // Database mein update karo
     const updatedTodo = await prisma.todo.update({
       where: { id: params.id },
       data: {
         done: todo.done
       }
     })
-    return NextResponse.json(updatedTodo)
-  }
 
-  // "Test scenario 2: Invalid update"
-  return NextResponse.json(
-    { error: 'Invalid update data' },
-    { status: 400 }
-  )
+    // Response banao
+    return NextResponse.json(updatedTodo)
+  } catch (error) {
+    // Error handle karo
+    return NextResponse.json(
+      { error: 'Something went wrong' },
+      { status: 500 }
+    )
+  }
 }
 ```
 
-**Test scenarios:**
-- **Valid update** - Sahi data ke saath test
-- **Invalid update** - Galat data ke saath test
-- **Edge cases** - Boundary conditions ke saath test
+---
+
+## Step 6: Update Operation Ka Advantage
+
+Ab advantage samjho:
+
+```typescript
+// Pehle kaam karo
+// "Ab advantage samjhna hai — iske liye examples chahiye"
+// "Update operation ka advantage yeh hai ki"
+// "1. Partial update kar sakte hain"
+// "2. Timestamp add kar sakte hain"
+// "3. Type safety milti hai"
+```
+
+**Advantage:**
+- **Partial update** - Sirf specific fields update kar sakte hain
+- **Timestamp** - Update time track kar sakte hain
+- **Type safety** - TypeScript se type checking milti hai
 
 ---
 
@@ -233,9 +182,9 @@ export async function PATCH(req: Request, { params }) {
 
 ✅ **Problem** - Bina update ke todo kaise toggle karenge?
 ✅ **Update Todo ka importance** - Light switch jaisa, status change karne ke liye zaroori
-✅ **Update operation** - PATCH method se data update karna
-✅ **Partial update** - Sirf specific fields update karna
-✅ **Testing** - Operation ko test karna
+✅ **PATCH method** - Data update karne ke liye
+✅ **Data parsing** - JSON format mein data parse karna
+✅ **Database update** - Prisma se data update karna
 
 ---
 

@@ -4,45 +4,46 @@
 
 Chalo ek scenario socho.
 
-Tumne project setup kar liya (Doc 1.1), schema design kar liya (Doc 1.2), aur client setup kar liya (Doc 1.3). Ab socha "Database URL kaise secure rahega?"
+Tumne client setup kar liya (Doc 1.3). Ab socha "Database URL kaun provide karega?"
 
-Ab **kaun decide karega ki database URL kahan save hona chahiye?**
+Ab **kaun decide karega ki database URL kaise provide karna hai?**
 **Kaise pata chalega ki kaun URL kaun use kar raha hai?**
-**Kaise pata chalega ki kaun URL leak nahi hona chahiye?**
+**Kaise pata chalega ki kaun URL kaun save kar raha hai?**
 
-Sab kuch openly karna padega — aur yeh bahut unsafe hoga.
+Sab kuch hardcoded karna padega — aur yeh bahut unsafe hoga.
 
 ---
 
 Yeh sirf tumhara problem nahi hai. Socho:
 
-- **WhatsApp** — agar message server ka URL leak ho jaye, kaise pata chalega ki kaun server hack ho raha hai?
-- **Instagram** — agar database URL leak ho jaye, kaise pata chalega ki kaun data compromise ho raha hai?
-- **Amazon** — agar payment gateway ka URL leak ho jaye, kaise pata chalega ki kaun transaction hack ho raha hai?
+- **WhatsApp** — agar database URL hardcoded hota, kaise pata chalega ki kaun URL kaun use kar raha hai?
+- **Instagram** — agar backend URL hardcoded hota, kaise pata chalega ki kaun URL kaun use kar raha hai?
+- **Amazon** - agar database URL hardcoded hota, kaise pata chalega ki kaun URL kaun use kar raha hai?
 
 ---
 
 ## Environment Variables Kya Hote Hain? (Real Life Analogy)
 
-Environment variables ek **locker** jaisa hai:
+Environment Variables ek **locker** jaisa hai:
 
-| Storage Method | Security Level |
-|----------------|----------------|
-| Open paper     | Low (unsafe)   |
-| Locker         | Medium (safe)  |
-| Bank vault     | High (very safe)|
+| Locker | App Development |
+|--------|-----------------|
+| Key     | Environment Variable |
+| Locker  | .env file       |
+| Contents| Sensitive Data  |
+| Access  | Process.env     |
 
-Agar password open paper pe likha hua ho, koi bhi padh sakta hai. Isliye locker mein rakhte hain.
+Agar locker nahi hota, kaise pata chalega ki kaun key kaun use kar raha hai? Isliye locker zaroori hai.
 
 ---
 
 ## Hum Kya Setup Karenge?
 
-Hum environment variables setup karenge jisse:
+Hum Environment Variables setup karenge jisse:
 
-1. **Database URL secure rahe** - URL leak na ho
-2. **Configuration manage ho** - Alag alag environments ke liye alag settings
-3. **Code clean rahe** - Hardcoded values na ho
+1. **Database URL secure ho** - URL safe rahe
+2. **Configuration manage ho** - Settings easily manage ho
+3. **Multiple environments ho** - Development, production alag ho
 
 ---
 
@@ -54,132 +55,105 @@ Ab .env file create karte hain:
 touch .env
 ```
 
+**Kyun .env file?**
+- Sensitive data ke liye
+- Environment variables ke liye
+- Convention hai ki .env mein secrets rakha jata hai
+
+---
+
+## Step 2: Database URL Add Karo
+
+Ab database URL add karte hain:
+
 ```env
-# Pehle kaam karo
 DATABASE_URL="postgresql://username:password@localhost:5432/mydb"
-
-# "Ab is URL ko secure karna hai — iske liye .env file mein daalna hai"
-DATABASE_URL="postgresql://nextjs:password@localhost:5432/server_actions"
-
-# "Ab is file ko .gitignore mein daalna hai taaki git mein na jaaye"
 ```
 
-**Kyun yeh structure?**
-- **.env** - Secret variables ke liye file
-- **DATABASE_URL** - Database connection string
-- **.gitignore** - Git mein na jaane ke liye
+**Kyun yeh format?**
+- **postgresql://** - Database type
+- **username:password** - Credentials
+- **localhost:5432** - Host aur port
+- **mydb** - Database name
 
 ---
 
-## Step 2: .gitignore File Edit Karo
+## Step 3: Schema.prisma File Edit Karo
 
-Ab .gitignore file edit karte hain:
+Ab schema.prisma file edit karte hain:
 
-```gitignore
-# Pehle kaam karo
-node_modules/
-.next/
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+```prisma
+// Pehle kaam karo
+generator client {
+  provider = "prisma-client-js"
+}
 
-# "Ab .env file ko bhi add karna hai taaki wo bhi git mein na jaaye"
-.env
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// "Ab model define karna hai — iske liye Prisma ki syntax chahiye"
+model Todo {
+  id        String   @id @default(cuid())
+  title     String
+  done      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
 ```
 
-**Kyun yeh entries?**
-- **.env** - Environment variables file
-- **.env.local** - Local environment variables
-- **.env.development** - Development environment variables
-- **.env.test** - Test environment variables
-- **.env.production** - Production environment variables
+**Kyun env("DATABASE_URL")?**
+- **env()** - Environment variable ko access karta hai
+- **DATABASE_URL** - Variable ka name
+- **.env file** - Variable ka source
 
 ---
 
-## Step 3: Database Connection Check Karo
+## Step 4: Connection Test Karo
 
-Ab database connection check karte hain:
+Ab connection test karte hain:
+
+```bash
+npx prisma db seed --preview-feature
+```
+
+Yeh command kya karta hai:
+- Database mein data seed karta hai
+- Connection test karta hai
+- Ready karta hai database ko use karne ke liye
+
+---
+
+## Step 5: Connection Samjho
+
+Ab humara connection ready hai. Socho:
 
 ```typescript
 // Pehle kaam karo
 import prisma from './lib/prisma'
 
-// "Ab environment variables se database URL lekar connection check karte hain"
-async function checkConnection() {
-  try {
-    const todos = await prisma.todo.findMany()
-    console.log('Database connection successful!', todos)
-  } catch (error) {
-    console.error('Database connection failed:', error)
-  }
-}
+// "Ab database se data fetch karna hai — iske liye prisma client chahiye"
+const allTodos = await prisma.todo.findMany()
 
-checkConnection()
+// "Ab is data ko use kar sakte hain"
+console.log(allTodos)
 ```
 
-**Kyun yeh code?**
-- **import prisma** - Client import karna
-- **findMany()** - Data fetch karke check karna
-- **try-catch** - Error handling ke liye
-
----
-
-## Step 4: Environment Variables Import Karne Ka Tarika
-
-Ab environment variables kaise import karte hain, samjho:
-
-```typescript
-// Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
-// "Ab environment variables ko use karke response bana rahe hain"
-export async function GET() {
-  // "Database se data fetch kar rahe hain"
-  const todos = await prisma.todo.findMany()
-
-  // "Ab response banane ke liye NextResponse use kar rahe hain"
-  return NextResponse.json(todos)
-}
-```
-
-**Import ka pattern:**
-- **import { NextResponse }** - Next.js API routes ke liye
-- **import prisma** - Database client ke liye
-- **NextResponse.json()** - Response format karne ke liye
-
----
-
-## Step 5: Multiple Environment Setup
-
-Ab multiple environments setup karte hain:
-
-```env
-# Development environment
-DATABASE_URL="postgresql://nextjs:password@localhost:5432/server_actions_dev"
-
-# Test environment
-DATABASE_URL="postgresql://nextjs:password@localhost:5432/server_actions_test"
-
-# Production environment
-DATABASE_URL="postgresql://nextjs:password@localhost:5432/server_actions_prod"
-```
-
-**Kyun alag alag environments?**
-- **Development** - Local development ke liye
-- **Test** - Testing ke liye
-- **Production** - Live deployment ke liye
+**Connection flow:**
+- **.env file** - URL provide karta hai
+- **env()** - URL ko access karta hai
+- **prisma client** - URL ko use karta hai
+- **Database** - Connection establish karta hai
 
 ---
 
 ## Summary — Doc 1.4 Mein Kya Sikha
 
-✅ **Problem** - Bina secure connection ke database URL leak ho sakta hai
-✅ **Environment variables ka importance** - Locker jaisa, security ke liye zaroori
-✅ **.env file** - Secret variables ke liye file
-✅ **.gitignore** - Git mein na jaane ke liye
-✅ **Multiple environments** - Alag alag settings ke liye alag files
+✅ **Problem** - Bina secure connection ke database URL kaise provide karenge?
+✅ **Environment variables ka importance** - Locker jaisa, sensitive data ke liye zaroori
+✅ **.env file** - Secrets ke liye convention
+✅ **env() function** - Variable ko access karne ka tarika
+✅ **Connection test** - Kaise check karte hain ki connection kaam kar raha hai
 
 ---
 
@@ -187,4 +161,4 @@ DATABASE_URL="postgresql://nextjs:password@localhost:5432/server_actions_prod"
 
 **Doc 2.1: Server Actions Kya Hote Hain?**
 
-Abhi humne project setup kiya, schema design kiya, client setup kiya, aur environment variables setup kiye. Ab actual Server Actions samjhenge. 🚀
+Abhi humne project setup kiya. Lekin Server Actions kya hote hain? Kaise kaam karte hain? Woh samjhenge agle doc mein. 🚀

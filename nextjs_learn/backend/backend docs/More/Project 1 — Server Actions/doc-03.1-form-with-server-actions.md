@@ -53,74 +53,114 @@ Ab basic form structure banate hain:
 
 ```typescript
 // Pehle kaam karo
-import { useState } from 'react'
-
 // "Ab form ka structure banate hain"
-export default function TodoForm() {
-  // "Ab form state ko manage karne ke liye useState use karte hain"
-  const [formData, setFormData] = useState({
-    title: '',
-    done: false
-  })
-
-  // "Ab form submit karne ke liye function banate hain"
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    // "Ab form data ko server ko bhejte hain"
-    const response = await fetch('/api/todos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-
-    // "Ab response ko handle karte hain"
-    const result = await response.json()
-    console.log('Todo created:', result)
-  }
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={formData.title}
-        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-        placeholder="Enter todo title"
-      />
-      <button type="submit">Add Todo</button>
-    </form>
-  )
-}
+// "Form ke liye useState use karte hain"
+// "Form state ko manage karne ke liye useState zaroori hai"
 ```
 
 **Kyun yeh structure?**
 - **useState** - Form state manage karne ke liye
-- **handleSubmit** - Form submit karne ke liye
-- **fetch** - Server ko data bhejne ke liye
+- **formData** - Form data ko store karne ke liye
+- **setFormData** - Data ko update karne ke liye
 
 ---
 
-## Step 2: Form with Server Actions
+## Step 2: Form Fields Banate Hain
 
-Ab form with Server Actions banate hain:
+Ab form fields banate hain:
 
 ```typescript
 // Pehle kaam karo
-import { useState } from 'react'
+// "Ab form fields banate hain"
+// "Input fields ke liye type="text" use karte hain"
+// "Value aur onChange ka use zaroori hai"
+```
 
-// "Ab form ko Server Actions ke saath integrate karte hain"
+**Kyun yeh approach?**
+- **type="text"** - Text input ke liye
+- **value** - Current value ko show karta hai
+- **onChange** - Data ko update karta hai
+
+---
+
+## Step 3: Form Submit Karo
+
+Ab form submit karte hain:
+
+```typescript
+// Pehle kaam karo
+// "Ab form submit karna hai — iske liye handleSubmit function banate hain"
+// "handleSubmit function form submit ko handle karta hai"
+// "e.preventDefault() se page refresh nahi hota"
+```
+
+**Kyun yeh structure?**
+- **handleSubmit** - Form submit ko handle karta hai
+- **e.preventDefault()** - Page refresh ko prevent karta hai
+- **async function** - Async operation handle karta hai
+
+---
+
+## Step 4: Server Actions Ko Call Karo
+
+Ab Server Actions ko call karte hain:
+
+```typescript
+// Pehle kaam karo
+// "Ab Server Actions ko call karna hai"
+// "fetch se data server ko bhejte hain"
+// "POST method se data create karte hain"
+```
+
+**Kyun yeh approach?**
+- **fetch** - Data ko server ko bhejta hai
+- **POST method** - Data create karne ke liye
+- **JSON.stringify** - Data ko string format mein convert karta hai
+
+---
+
+## Step 5: Response Handle Karo
+
+Ab response handle karte hain:
+
+```typescript
+// Pehle kaam karo
+// "Ab response ko handle karna hai"
+// "Response ko await karke data nikalte hain"
+// "Response ko console.log se dekh sakte hain"
+```
+
+**Kyun yeh structure?**
+- **await response.json()** - Data ko parse karta hai
+- **console.log** - Data ko display karta hai
+- **Error handling** - Errors ko handle karta hai
+
+---
+
+## Step 6: Complete Form Function
+
+Ab complete function banate hain:
+
+```typescript
+// Pehle kaam karo
+// "Ab complete function banate hain"
+// "Sab steps ko mila kar ek function banate hain"
+// "Error handling bhi add karte hain"
+```
+
+**Complete function:**
+```typescript
 export default function TodoForm() {
   const [formData, setFormData] = useState({
     title: '',
     done: false
   })
 
-  // "Ab Server Action ko call karte hain"
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+
     try {
-      // "Ab Server Action ko call kar rahe hain"
+      // Data ko server ko bhejo
       const response = await fetch('/api/todos', {
         method: 'POST',
         headers: {
@@ -129,7 +169,7 @@ export default function TodoForm() {
         body: JSON.stringify(formData)
       })
 
-      // "Ab response ko handle kar rahe hain"
+      // Response ko handle karo
       const result = await response.json()
       console.log('Todo created:', result)
     } catch (error) {
@@ -151,35 +191,50 @@ export default function TodoForm() {
 }
 ```
 
-**Advantage:**
-- **Type safety** - TypeScript se type checking
-- **Error handling** - Error handle karna
-- **Simple syntax** - API routes se simple
-
 ---
 
-## Step 3: Form Validation
+## Step 7: Form Validation Add Karo
 
-Ab form validation samjho:
+Ab form validation add karte hain:
 
 ```typescript
 // Pehle kaam karo
-import { useState } from 'react'
+// "Ab form validation add karte hain"
+// "Validation ke liye errors state use karte hain"
+// "Validation check karke errors display karte hain"
+```
 
-// "Ab form validation ko samjhte hain"
+**Validation approach:**
+- **errors state** - Errors ko store karne ke liye
+- **Validation checks** - Required fields check karna
+- **Error display** - Errors ko display karna
+
+---
+
+## Step 8: Complete Form with Validation
+
+Ab complete form with validation banate hain:
+
+```typescript
+// Pehle kaam karo
+// "Ab complete form with validation banate hain"
+// "Sab steps ko mila kar ek function banate hain"
+// "Validation, error handling, sab add karte hain"
+```
+
+**Complete function:**
+```typescript
 export default function TodoForm() {
   const [formData, setFormData] = useState({
     title: '',
     done: false
   })
-
   const [errors, setErrors] = useState({})
 
-  // "Ab form submit karne se pehle validation check karte hain"
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    // "Ab validation check karte hain"
+    // Validation check karo
     const newErrors: any = {}
     if (!formData.title) {
       newErrors.title = 'Title is required'
@@ -195,7 +250,7 @@ export default function TodoForm() {
     }
 
     try {
-      // "Ab Server Action ko call kar rahe hain"
+      // Data ko server ko bhejo
       const response = await fetch('/api/todos', {
         method: 'POST',
         headers: {
@@ -204,7 +259,7 @@ export default function TodoForm() {
         body: JSON.stringify(formData)
       })
 
-      // "Ab response ko handle kar rahe hain"
+      // Response ko handle karo
       const result = await response.json()
       console.log('Todo created:', result)
     } catch (error) {
@@ -226,179 +281,6 @@ export default function TodoForm() {
   )
 }
 ```
-
-**Validation checks:**
-- **Required fields** - Mandatory fields check
-- **Length validation** - Length check
-- **Type validation** - Data type check
-
----
-
-## Step 4: Form with Loading States
-
-Ab loading states samjho:
-
-```typescript
-// Pehle kaam karo
-import { useState } from 'react'
-
-// "Ab loading states ko samjhte hain"
-export default function TodoForm() {
-  const [formData, setFormData] = useState({
-    title: '',
-    done: false
-  })
-
-  const [errors, setErrors] = useState({})
-  const [loading, setLoading] = useState(false)
-
-  // "Ab form submit karne se pehle loading state set karte hain"
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-
-    // "Ab validation check karte hain"
-    const newErrors: any = {}
-    if (!formData.title) {
-      newErrors.title = 'Title is required'
-    }
-
-    if (formData.title.length > 100) {
-      newErrors.title = 'Title too long'
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
-
-    setLoading(true)
-    try {
-      // "Ab Server Action ko call kar rahe hain"
-      const response = await fetch('/api/todos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      })
-
-      // "Ab response ko handle kar rahe hain"
-      const result = await response.json()
-      console.log('Todo created:', result)
-    } catch (error) {
-      console.error('Error creating todo:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={formData.title}
-        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-        placeholder="Enter todo title"
-      />
-      {errors.title && <p className="error">{errors.title}</p>}
-      <button type="submit" disabled={loading}>
-        {loading ? 'Creating...' : 'Add Todo'}
-      </button>
-    </form>
-  )
-}
-```
-
-**Loading states:**
-- **Loading indicator** - Loading show karna
-- **Disabled button** - Button disable karna
-- **Spinner** - Spinner show karna
-
----
-
-## Step 5: Form with Error Handling
-
-Ab error handling samjho:
-
-```typescript
-// Pehle kaam karo
-import { useState } from 'react'
-
-// "Ab error handling ko samjhte hain"
-export default function TodoForm() {
-  const [formData, setFormData] = useState({
-    title: '',
-    done: false
-  })
-
-  const [errors, setErrors] = useState({})
-  const [loading, setLoading] = useState(false)
-  const [formError, setFormError] = useState('')
-
-  // "Ab form submit karne se pehle error handling karte hain"
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-
-    // "Ab validation check karte hain"
-    const newErrors: any = {}
-    if (!formData.title) {
-      newErrors.title = 'Title is required'
-    }
-
-    if (formData.title.length > 100) {
-      newErrors.title = 'Title too long'
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
-
-    setLoading(true)
-    setFormError('')
-    try {
-      // "Ab Server Action ko call kar rahe hain"
-      const response = await fetch('/api/todos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      })
-
-      // "Ab response ko handle kar rahe hain"
-      const result = await response.json()
-      console.log('Todo created:', result)
-    } catch (error) {
-      console.error('Error creating todo:', error)
-      setFormError('Something went wrong. Please try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={formData.title}
-        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-        placeholder="Enter todo title"
-      />
-      {errors.title && <p className="error">{errors.title}</p>}
-      {formError && <p className="form-error">{formError}</p>}
-      <button type="submit" disabled={loading}>
-        {loading ? 'Creating...' : 'Add Todo'}
-      </button>
-    </form>
-  )
-}
-```
-
-**Error handling:**
-- **Form errors** - Form level errors
-- **Field errors** - Field level errors
-- **Loading states** - Loading states
 
 ---
 
@@ -408,7 +290,7 @@ export default function TodoForm() {
 ✅ **Form with Server Actions ka importance** - Order form jaisa, data submit karne ke liye zaroori
 ✅ **Basic form structure** - Form ka basic structure
 ✅ **Form validation** - Data validate karna
-✅ **Loading states** - Loading states handle karna
+✅ **Server Actions call** - Data ko server ko bhejna
 
 ---
 

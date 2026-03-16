@@ -52,30 +52,9 @@ Ab custom error classes banate hain:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
 // "Ab custom error classes banate hain"
-class ValidationError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'ValidationError'
-  }
-}
-
-class DatabaseError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'DatabaseError'
-  }
-}
-
-class NotFoundError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'NotFoundError'
-  }
-}
+// "Custom error classes banane ke liye Error class extend karte hain"
+// "Har error ka apna class banate hain"
 ```
 
 **Kyun yeh classes?**
@@ -91,44 +70,9 @@ Ab custom error handling samjho:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
 // "Ab custom error handling ko samjhte hain"
-export async function POST(req: Request) {
-  try {
-    const todo = await req.json()
-    const createdTodo = await prisma.todo.create({
-      data: {
-        title: todo.title,
-        done: false
-      }
-    })
-    return NextResponse.json(createdTodo)
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      )
-    } else if (error instanceof DatabaseError) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      )
-    } else if (error instanceof NotFoundError) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 404 }
-      )
-    } else {
-      return NextResponse.json(
-        { error: 'Something went wrong' },
-        { status: 500 }
-      )
-    }
-  }
-}
+// "Custom errors ko handle karne ke liye instanceof use karte hain"
+// "Har error ko alag alag handle karte hain"
 ```
 
 **Custom handling:**
@@ -144,44 +88,9 @@ Ab custom error usage samjho:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
 // "Ab custom errors ko use karke dekhna hai"
-export async function POST(req: Request) {
-  try {
-    const todo = await req.json()
-
-    // "Ab validation check karte hain"
-    if (!todo.title) {
-      throw new ValidationError('Title is required')
-    }
-
-    if (todo.title.length > 100) {
-      throw new ValidationError('Title too long')
-    }
-
-    const createdTodo = await prisma.todo.create({
-      data: {
-        title: todo.title,
-        done: false
-      }
-    })
-    return NextResponse.json(createdTodo)
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      )
-    } else {
-      return NextResponse.json(
-        { error: 'Something went wrong' },
-        { status: 500 }
-      )
-    }
-  }
-}
+// "Custom errors ko throw karke use karte hain"
+// "Validation mein custom errors use karte hain"
 ```
 
 **Usage scenarios:**
@@ -197,10 +106,49 @@ Ab structure samjho:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
 // "Ab custom error types ko standardize karte hain"
+// "Base error class banate hain"
+// "Har error ko base class se extend karte hain"
+```
+
+**Standardized structure:**
+- **AppError** - Base error class
+- **code** - Error code
+- **status** - HTTP status code
+
+---
+
+## Step 5: Custom Error Types Testing
+
+Ab testing samjho:
+
+```typescript
+// Pehle kaam karo
+// "Ab custom error types ko test karke dekhna hai"
+// "Custom errors ko test karke dekhna hai"
+// "Error handling ko test karke dekhna hai"
+```
+
+**Test scenarios:**
+- **Validation errors** - ValidationError test karna
+- **Database errors** - DatabaseError test karna
+- **Not found errors** - NotFoundError test karna
+
+---
+
+## Step 6: Complete Custom Error Types
+
+Ab complete custom error types banate hain:
+
+```typescript
+// Pehle kaam karo
+// "Ab complete custom error types banate hain"
+// "Sab steps ko mila kar ek structure banate hain"
+// "Error handling ko complete karte hain"
+```
+
+**Complete structure:**
+```typescript
 class AppError extends Error {
   constructor(
     message: string,
@@ -231,45 +179,56 @@ class NotFoundError extends AppError {
 }
 ```
 
-**Standardized structure:**
-- **AppError** - Base error class
-- **code** - Error code
-- **status** - HTTP status code
-
 ---
 
-## Step 5: Custom Error Types Testing
+## Step 7: Complete Error Handling with Custom Types
 
-Ab testing samjho:
+Ab complete error handling banate hain:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
+// "Ab complete error handling banate hain"
+// "Custom errors ko use karke error handling karte hain"
+// "Validation mein custom errors use karte hain"
+```
 
-// "Ab custom error types ko test karke dekhna hai"
+**Complete function:**
+```typescript
 export async function POST(req: Request) {
   try {
+    // Data parse karo
     const todo = await req.json()
 
-    // "Test scenario 1: Validation error"
+    // Validation check karo
     if (!todo.title) {
       throw new ValidationError('Title is required')
     }
 
-    // "Test scenario 2: Database error"
+    if (todo.title.length > 100) {
+      throw new ValidationError('Title too long')
+    }
+
+    // Database mein create karo
     const createdTodo = await prisma.todo.create({
       data: {
         title: todo.title,
         done: false
       }
     })
+
+    // Response banao
     return NextResponse.json(createdTodo)
   } catch (error) {
+    // Error ko handle karo
     if (error instanceof ValidationError) {
       return NextResponse.json(
         { error: error.message },
-        { status: 400 }
+        { status: error.status }
+      )
+    } else if (error instanceof DatabaseError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.status }
       )
     } else {
       return NextResponse.json(
@@ -280,11 +239,6 @@ export async function POST(req: Request) {
   }
 }
 ```
-
-**Test scenarios:**
-- **Validation errors** - ValidationError test karna
-- **Database errors** - DatabaseError test karna
-- **Not found errors** - NotFoundError test karna
 
 ---
 

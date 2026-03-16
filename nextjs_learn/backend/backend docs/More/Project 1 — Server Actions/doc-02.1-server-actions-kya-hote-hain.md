@@ -1,24 +1,24 @@
-# Doc 2.1 — Server Actions Kya Hote Hain? 🎯
+# Doc 2.1 — Server Actions Kya Hote Hain? 🤔
 
 ## Pehle Problem Samjho — Bina Server Actions Ke Kya Hoga?
 
 Chalo ek scenario socho.
 
-Tumne project setup kar liya (Doc 1.1), schema design kiya (Doc 1.2), client setup kiya (Doc 1.3), aur environment variables setup kiye (Doc 1.4). Ab socha "Frontend se data kaise bhejna hai?"
+Tumne project setup kar liya (Doc 1.4). Ab socha "Data kaise handle karenge?"
 
-Ab **kaun decide karega ki frontend se backend kaise baat karega?**
-**Kaise pata chalega ki kaun API route kaun sa kaam karta hai?**
-**Kaise pata chalega ki kaun function kaun sa logic implement karta hai?**
+Ab **kaun decide karega ki data kaise handle karna hai?**
+**Kaise pata chalega ki kaun data kaun process kar raha hai?**
+**Kaise pata chalega ki kaun data kaun save kar raha hai?**
 
-Sab kuch manually karna padega — aur yeh bahut complicated hoga.
+Sab kuch manually karna padega — aur yeh bahut time waste hoga.
 
 ---
 
 Yeh sirf tumhara problem nahi hai. Socho:
 
-- **WhatsApp** — agar message send karne ka tarika nahi hota, kaise pata chalega ki kaun message kis server pe bhejna hai?
-- **Instagram** — agar post karne ka tarika nahi hota, kaise pata chalega ki kaun post kis database mein daalna hai?
-- **Amazon** — agar order karne ka tarika nahi hota, kaise pata chalega ki kaun order kis system mein daalna hai?
+- **WhatsApp** — agar server actions nahi hote, messages kahan process hote?
+- **Instagram** — agar server actions nahi hote, likes aur comments kaun handle karte?
+- **Amazon** - agar server actions nahi hote, orders kaun process karte?
 
 ---
 
@@ -26,14 +26,14 @@ Yeh sirf tumhara problem nahi hai. Socho:
 
 Server Actions ek **waiter** jaisa hai:
 
-| Communication | App Development |
-|---------------|-----------------|
-| Customer      | Frontend (React) |
-| Waiter        | Server Actions |
-| Kitchen       | Backend/API |
-| Food          | Data/Response |
+| Waiter | Server Actions |
+|--------|----------------|
+| Customer | Frontend |
+| Order | Data Request |
+| Kitchen | Server |
+| Food | Response |
 
-Agar waiter nahi hai, customer kitchen mein jaakar khud order kaise de? Isliye waiter zaroori hai.
+Agar waiter nahi hota, kaise pata chalega ki kaun order kaun le raha hai? Isliye waiter zaroori hai.
 
 ---
 
@@ -41,44 +41,27 @@ Agar waiter nahi hai, customer kitchen mein jaakar khud order kaise de? Isliye w
 
 Hum Server Actions sikhenge jisse:
 
-1. **Frontend se backend ka connection ho** - Frontend se data bhej sake
-2. **API routes simple ho** - API routes manually banane ki zarurat nahi
-3. **Type safety mile** - TypeScript se type checking
+1. **Data handle ho** - Data easily handle ho
+2. **Security ho** - Data secure rahe
+3. **Performance ho** - Fast response mile
 
 ---
 
-## Step 1: Server Actions Kya Hote Hain?
+## Step 1: Server Actions Ka Concept Samjho
 
-Ab Server Actions samjhte hain:
+Ab concept samjhte hain:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
-// "Ab Server Action banana hai — iske liye Next.js ki syntax chahiye"
-export async function POST() {
-  // "Frontend se data aa raha hai — isko parse karna hai"
-  const todo = await request.json()
-
-  // "Ab database mein data save karna hai"
-  const createdTodo = await prisma.todo.create({
-    data: {
-      title: todo.title,
-      done: false
-    }
-  })
-
-  // "Ab response bana kar bhejna hai"
-  return NextResponse.json(createdTodo)
-}
+// "Ab server actions ko samjhna hai — iske liye Next.js ki syntax chahiye"
+// "Server actions Next.js ki built-in feature hai"
+// "Ye data ko server par process karta hai"
 ```
 
-**Kyun yeh structure?**
-- **POST()** - HTTP POST request handle karta hai
-- **request.json()** - Frontend se aaya data parse karta hai
-- **prisma.todo.create()** - Database mein data create karta hai
-- **NextResponse.json()** - Response format karta hai
+**Kyun yeh concept?**
+- **Built-in feature** - Next.js mein already available
+- **Data processing** - Server par data process hota hai
+- **Security** - Client se data safe rehta hai
 
 ---
 
@@ -88,130 +71,63 @@ Ab advantage samjho:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
-// "Ab Server Action banate hain — isme type safety bhi hai"
-export async function POST(req: Request) {
-  // "Frontend se data aa raha hai — isko parse kar rahe hain"
-  const todo = await req.json()
-
-  // "Ab database mein data save kar rahe hain"
-  const createdTodo = await prisma.todo.create({
-    data: {
-      title: todo.title,
-      done: false
-    }
-  })
-
-  // "Ab response bana kar bhej rahe hain"
-  return NextResponse.json(createdTodo)
-}
+// "Ab advantage samjhna hai — iske liye examples chahiye"
+// "Server actions ka advantage yeh hai ki"
+// "1. No API routes needed"
+// "2. Type safety"
+// "3. Easy to use"
 ```
 
 **Advantage:**
+- **No API routes** - Separate API routes nahi chahiye
 - **Type safety** - TypeScript se type checking
-- **Simple syntax** - API routes se simple
-- **Built-in** - Next.js mein already available
+- **Easy to use** - Simple syntax
 
 ---
 
-## Step 3: Server Actions Ka Usage
+## Step 3: Server Actions Ka Syntax
+
+Ab syntax samjho:
+
+```typescript
+// Pehle kaam karo
+// "Ab syntax samjhna hai — iske liye Next.js ki syntax chahiye"
+// "Server actions ke liye export async function use karte hain"
+// "Method ke hisaab se POST, GET, PATCH, DELETE use karte hain"
+```
+
+**Syntax:**
+- **export async function** - Function export karna
+- **POST/GET/PATCH/DELETE** - Method ke hisaab se
+- **Request/Response** - Data handle karna
+
+---
+
+## Step 4: Server Actions Ka Usage
 
 Ab usage samjho:
 
 ```typescript
 // Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
-// "Ab alag alag operations ke liye alag alag Server Actions banate hain"
-export async function POST(req: Request) {
-  // "Create operation ke liye"
-  const todo = await req.json()
-  const createdTodo = await prisma.todo.create({
-    data: {
-      title: todo.title,
-      done: false
-    }
-  })
-  return NextResponse.json(createdTodo)
-}
-
-export async function GET() {
-  // "Read operation ke liye"
-  const todos = await prisma.todo.findMany()
-  return NextResponse.json(todos)
-}
-
-export async function PATCH(req: Request, { params }) {
-  // "Update operation ke liye"
-  const todo = await req.json()
-  const updatedTodo = await prisma.todo.update({
-    where: { id: params.id },
-    data: { done: todo.done }
-  })
-  return NextResponse.json(updatedTodo)
-}
-
-export async function DELETE({ params }) {
-  // "Delete operation ke liye"
-  const deletedTodo = await prisma.todo.delete({
-    where: { id: params.id }
-  })
-  return NextResponse.json(deletedTodo)
-}
+// "Ab usage samjhna hai — iske liye examples chahiye"
+// "Server actions ko use karke data ko server par process karte hain"
+// "Response ko frontend ko bhejte hain"
 ```
 
-**Har operation ka matlab:**
-- **POST()** - Create operation
-- **GET()** - Read operation
-- **PATCH()** - Update operation
-- **DELETE()** - Delete operation
-
----
-
-## Step 4: Server Actions Ka Import Karne Ka Tarika
-
-Ab import kaise karte hain, samjho:
-
-```typescript
-// Pehle kaam karo
-import { NextResponse } from 'next/server'
-import prisma from './lib/prisma'
-
-// "Ab alag alag files mein isko use karke dekhna hai"
-export async function POST(req: Request) {
-  // "Frontend se data aa raha hai — isko parse kar rahe hain"
-  const todo = await req.json()
-
-  // "Ab database mein data save kar rahe hain"
-  const createdTodo = await prisma.todo.create({
-    data: {
-      title: todo.title,
-      done: false
-    }
-  })
-
-  // "Ab response bana kar bhej rahe hain"
-  return NextResponse.json(createdTodo)
-}
-```
-
-**Import ka pattern:**
-- **import { NextResponse }** - Next.js API routes ke liye
-- **import prisma** - Database client ke liye
-- **export async function** - Server Action export karne ke liye
+**Usage:**
+- **Data processing** - Server par data process karna
+- **Response** - Frontend ko response bhejna
+- **Error handling** - Errors ko handle karna
 
 ---
 
 ## Summary — Doc 2.1 Mein Kya Sikha
 
-✅ **Problem** - Bina Server Actions ke frontend se backend kaise baat karega?
-✅ **Server Actions ka importance** - Waiter jaisa, communication ke liye zaroori
-✅ **Simple syntax** - API routes se simple
-✅ **Type safety** - TypeScript se type checking
-✅ **Operations** - POST, GET, PATCH, DELETE kaise kaam karte hain
+✅ **Problem** - Bina server actions ke data kaise handle karenge?
+✅ **Server actions ka importance** - Waiter jaisa, data handling ke liye zaroori
+✅ **Concept** - Next.js ki built-in feature
+✅ **Advantage** - No API routes, type safety, easy to use
+✅ **Syntax** - Export async function, method ke hisaab se
 
 ---
 
@@ -219,4 +135,4 @@ export async function POST(req: Request) {
 
 **Doc 2.2: Add Todo (Create)**
 
-Abhi humne Server Actions samjhe. Lekin kaise add karenge todo? Kaise create karenge? Woh samjhenge agle doc mein. 🚀
+Abhi humne server actions samjhe. Lekin kaise add karenge todo? Kaise create karenge? Woh samjhenge agle doc mein. 🚀
