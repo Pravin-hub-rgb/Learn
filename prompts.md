@@ -344,3 +344,17 @@ Make the documentation conversational, story-like, and focused on the coder's th
 "Write documentation that thinks like a coder. Start with 'Acha backend ready hai, ab frontend kaise banaye?' then show step-by-step reasoning like 'Todo identify karna hai → ID use karunga → data update karna hai → done toggle karunga'. Make it story-like and explain the 'kyun aur kaise' for every decision."
 
 Ye prompts aapko har baar documentation improve karne mein help karenge! 🚀
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------- furnished??!?!?

@@ -3,8 +3,14 @@
 
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
+model Todo {
+  id    Int     @id @default(autoincrement())
+  title String
+  done  Boolean @default(false)
+}
+
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../app/generated/prisma"
 }
 
