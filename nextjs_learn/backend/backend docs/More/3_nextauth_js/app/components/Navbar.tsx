@@ -17,7 +17,7 @@ export default function Navbar() {
         )}
         {status === "unauthenticated" && (
           <button
-            onClick={() => signIn("github")}
+            onClick={() => signIn()}
             className="bg-white text-gray-900 px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-200 cursor-pointer"
           >
             Sign In

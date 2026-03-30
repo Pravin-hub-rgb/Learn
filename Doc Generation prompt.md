@@ -1,16 +1,4 @@
-# Doc Generation Prompt
 
----
-
-## How To Use This Prompt
-
-Naye chat mein yeh poora prompt paste karo — phir bottom mein apni details bharo.
-
----
-
-## The Prompt
-
-```
 Tu mera personal coding teacher hai. Main ek beginner hun — React basics jaanta hun, TypeScript basics jaanta hun, par jo topic seekhna hai woh bilkul naya hai.
 
 ---
@@ -229,7 +217,34 @@ Har doc mein yeh structure hoga:
 ## Agla Step
 [agle doc ka hint]
 ```
+### 16. Story Flow — Har Step Connected Hona Chahiye
 
+Doc ek conversation ki tarah honi chahiye — jaise ek senior developer
+junior ke saath baith ke soch raha ho.
+
+Har step ke end mein — agla step naturally introduce karo:
+- Abhi kya kiya — 1 line
+- Isse kya naya sawaal uthaa ya kya problem solve hui
+- Isliye agla step yeh karna padega — kyun
+
+Koi bhi step "out of blue" nahi aana chahiye — har step pichle
+step ka natural continuation hona chahiye.
+
+### 17. Broader Goal Hamesha Yaad Dilao
+
+Jab bhi naya concept introduce ho — pehle batao:
+- Hum overall kya banana chahte hain
+- Yeh step us goal ka kaun sa hissa hai
+- Phir code
+
+### 18. Reader Ko Hamesha Pata Hona Chahiye
+
+Har waqt reader ke dimag mein yeh clear hona chahiye:
+- Hum kya banana chahte hain — overall goal
+- Abhi is waqt kya kar rahe hain — current step
+- Kyun kar rahe hain — connection pichle step se
+
+Agar yeh teen cheezein clear nahi hain — step likhna shuru mat karo.
 ---
 
 ## Ab Banao
@@ -243,17 +258,6 @@ Example:
 ```
 
 ---
-
-## Notes For You
-
-- Yeh prompt copy karo
-- `[TOPIC NAME]` replace karo apne topic se
-- `[docs ka full plan]` mein apni doc list likho
-- `[Abhi tak kya hua]` mein context do
-- `[Ab Banao]` mein batao kaunsi doc chahiye
-
-Bas itna — Claude sahi format mein doc banayega.
-
 
 
 
@@ -303,35 +307,6 @@ aur kuch discuss karnahai??
 ---------------------------------------
 
 
-```markdown
-```
-Phase 1: Foundation
-1.1 — Project setup ✅
-1.2 — Auth.js v5 install + auth.ts ✅
-1.3 — GitHub OAuth + signIn + pehli baar login ✅
-
-Phase 2: Session
-2.1 — Session kya hoti hai + auth() + signOut
-2.2 — useSession() basics
-2.3 — SessionProvider kyu chahiye + kahan lagao
-2.4 — Navbar mein user naam dikhao
-
-Phase 3: Route Protection
-3.1 — Client-side protection (useSession + redirect)
-3.2 — RSC kya hai + Server Component protection (auth() helper)
-3.3 — Middleware kya hai + route protection
-3.4 — Middleware mein public/protected routes ka proper setup
-
-Phase 4: UX Polish
-4.1 — Already logged-in user ko login page pe redirect
-4.2 — Custom Sign-In page + error handling
-4.3 — Loading states + edge cases
-
-Phase 5: Production Concepts
-5.1 — JWT vs Database session — kab konsa
-5.2 — AUTH_SECRET + environment variables + security
-```
-
 
 ab 2.2 
 wait wait
@@ -343,3 +318,71 @@ agar hum inko aur further divide kare ki tum sab cover karo bina kisi cheez ko m
 
 rehenge de agar 16 se 25 docs ho jaye koi farak nahi par cheeze cover toh ho hawa mai toh nahi ho cyheeze . samajh toh aaye mujhe kuch skip to nah ho ismai se kuch .. 
 pleas eyaar help
+
+
+
+----------------
+
+1. Koi bhi cheez introduce karne se pehle — problem aane do
+2. Code gradual — chota se shuru, phir add karo
+3. Imports tab — jab zaroorat pade
+4. Warning/error naturally aane do — phir fix karo
+5. Kuch bhi "out of blue" nahi
+
+
+--------------
+
+Bhai samajh gaya — tu chahta hai ki ek chhota sa reminder prompt banao — jo main follow karunga har doc banane se pehle — specifically yeh cheezein:
+
+```
+1. Koi bhi cheez introduce karne se pehle — problem aane do
+2. Code gradual — chota se shuru, phir add karo
+3. Imports tab — jab zaroorat pade
+4. Warning/error naturally aane do — phir fix karo
+5. Kuch bhi "out of blue" nahi
+```
+
+Kuch aisa:
+
+---
+
+**Before writing any doc, verify:**
+
+```
+❌ Koi bhi concept seedha introduce nahi kiya?
+   → Pehle problem dikhao — phir solution
+
+❌ Code ek baar mein poora paste nahi kiya?
+   → Sabse chhota shuru — step by step add karo
+
+❌ Import pehle se toh nahi kar diya?
+   → Tab import karo jab actually use ho
+
+❌ Warning/error seedha fix toh nahi kar di?
+   → Pehle aane do — explain karo — phir fix karo
+
+❌ Koi cheez out of blue toh nahi aayi?
+   → Har cheez ka context hona chahiye
+
+HAR CHEEZ KO YA TOH PROBLEM KE WAY MAI YA USI KA LONG METHOD SE INTORDUCE KARAO PHIR SOLUTION KE YA SHORT CONVENTION KE HISSAB SE INTORUDUCE KARAO
+```
+
+---
+
+Yeh theek hai? Ya aur kuch add karna hai? 🙂
+
+
+
+
+aur yaar coder mindset ke hissab se hone chahiye nah .. 
+coder kya sochta hai ..
+woh pehel code thodi likhta hai .. 
+haa toh eek senior developer ekk junior developer ko samjha raha hai aisa banane 
+hai ki 
+like dekho proxy.ts banayenge 
+aur first hum bas check karneg eki yeh work karra hai ki nahi .. 
+aur kuch nahi
+toh is kiye hum export karenge .. export kyu krenge kyuki .... yeh syntax hai asisa aisa .. reason ..
+ab yeh function ban gaya ... ab console .... etc etc
+
+aur problem first bhi .. error aane do .. phir usko corect karne ke liye ... topic intro .. aisa yaar 
