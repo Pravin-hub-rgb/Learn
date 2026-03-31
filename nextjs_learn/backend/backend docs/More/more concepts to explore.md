@@ -35,3 +35,6 @@
     - Using .env in Code
     - Local vs Production Secrets
     - Best Practices
+
+6. Front End System Design
+7. Back End System Design
