@@ -1,3 +1,4 @@
+1.0 react native kya hai
 1.1  — Pehla app banao + emulator pe chalao
 1.2  — View aur Text — RN mein div aur p kahan gaye?
 1.3  — StyleSheet — CSS nahi hai toh styling kaise?
