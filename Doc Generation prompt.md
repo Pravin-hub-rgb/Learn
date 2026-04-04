@@ -386,3 +386,10 @@ toh is kiye hum export karenge .. export kyu krenge kyuki .... yeh syntax hai as
 ab yeh function ban gaya ... ab console .... etc etc
 
 aur problem first bhi .. error aane do .. phir usko corect karne ke liye ... topic intro .. aisa yaar 
+
+
+
+phir bhi tum pehle code likhre ho phir uske baad samjha rahe ho .. 
+aisa nahi hona chaiye isko ulta hona chhaiy ebhai... 
+pehle batao ki kkya karenge kru karenge phir kaise karenge 
+kaise karenge mai syntax batao aisa hota yeh keoword iskliya hota hai yeh function yeh paramter leta hai aur kaho ab asal likhte hai aisae hoga .. 
