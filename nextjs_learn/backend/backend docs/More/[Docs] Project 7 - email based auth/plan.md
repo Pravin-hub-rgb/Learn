@@ -251,7 +251,7 @@ Koi bhi RESTful API route nahi banega (`app/api/`). Sab mutations Server Actions
 ## Phase 4 — Protected Routes
 
 > **Is Phase Mein:**
-> UI: `(protected)/dashboard/page.tsx` | Lib function: `getCurrentUser()` | `middleware.ts` banegi
+> UI: `(protected)/dashboard/page.tsx` | Lib function: `getCurrentUser()` | `proxy.ts` banegi
 
 **4.1 — `getCurrentUser()` helper — `lib/session.ts` mein add karo**
 - `getSession()` → `prisma.user.findUnique` → user return karo
@@ -294,7 +294,6 @@ Koi bhi RESTful API route nahi banega (`app/api/`). Sab mutations Server Actions
 - Token kya hota hai, kaise kaam karta hai — pehle samjho
 
 **6.2 — `VerificationToken` model banana**
-- Tab banao — Phase 6 mein, pehle nahi
 - Fields: `id`, `userId`, `token`, `expiresAt`
 - Migration run karo
 
@@ -325,7 +324,6 @@ Koi bhi RESTful API route nahi banega (`app/api/`). Sab mutations Server Actions
 - Step by step sochte hain pehle — kya karna hai
 
 **7.2 — `PasswordResetToken` model banana**
-- Tab banao — Phase 7 mein, pehle nahi
 - Fields: `id`, `userId`, `token`, `expiresAt`
 - Migration run karo
 

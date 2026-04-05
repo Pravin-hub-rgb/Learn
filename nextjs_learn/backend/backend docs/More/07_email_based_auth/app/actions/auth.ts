@@ -2,23 +2,31 @@
 
 import prisma from "@/lib/prisma";
 import { hashPassword } from "@/lib/password";
+import { registrationSchema } from "@/lib/validations/auth";
 
-export type RegistrationResult = {
+type RegistrationResult = {
   error?: string;
   success?: boolean;
 };
 
 export async function registerUser(
+  state: RegistrationResult,
   formData: FormData,
 ): Promise<RegistrationResult> {
   console.log("Registration attempt");
-
+  const rawData = {
+    email: formData.get("email"),
+    password: formData.get("password"),
+  };
+  const result = registrationSchema.safeParse(rawData);
+  if (!result.success) {
+    // Pehla error message return karo
+    return {
+      error: result.error.issues[0].message,
+    };
+  }
   // FormData se values nikalo
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-
-  console.log("Email:", email);
-  console.log("Password:", password);
+const {email, password } = result.data;
 
   try {
     // Password hash karo
