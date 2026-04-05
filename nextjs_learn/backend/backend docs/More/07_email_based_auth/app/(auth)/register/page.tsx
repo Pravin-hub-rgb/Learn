@@ -52,7 +52,7 @@ export default function RegisterPage() {
           />
           {/* Client-side error */}
           {CSerrors.email && (
-            <span style={{ color: "red" }}>{CSerrors.email.message}</span>
+            <span className="text-red-500">{CSerrors.email.message}</span>
           )}
         </div>
         <div className="mb-4">
@@ -72,10 +72,12 @@ export default function RegisterPage() {
           />
           {/* Client-side error */}
           {CSerrors.password && (
-            <span style={{ color: "red" }}>{CSerrors.password.message}</span>
+            <span className="text-red-500">{CSerrors.password.message}</span>
           )}
         </div>
-        <button type="submit" disabled={isPending} 
+        <button
+          type="submit"
+          disabled={isPending}
           className={`w-full py-2 px-4 rounded-md text-white cursor-pointer ${isPending ? "bg-gray-400 cursor-not-allowed" : "bg-cyan-600 hover:bg-cyan-700"}`}
         >
           {isPending ? "Registering..." : "Register"}
