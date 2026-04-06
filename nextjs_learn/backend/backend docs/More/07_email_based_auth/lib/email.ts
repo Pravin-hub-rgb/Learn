@@ -2,9 +2,31 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-resend.emails.send({
-    from: "onboarding@resend.dev",
-    to: "pravinkumar3000@tutanota.com",
-    subject: "Hello from Resend!",
-    html: "<strong>It works!</strong>",
-})
+export async function sendEmail({
+  to,
+  subject,
+  html,
+}: {
+  to: string;
+  subject: string;
+  html: string;
+}) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to,
+      subject,
+      html,
+    });
+
+    if (error) {
+      console.error("Failed to send email:", error);
+      throw error;
+    }
+
+    return { success: true, id: data?.id };
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw error;
+  }
+}

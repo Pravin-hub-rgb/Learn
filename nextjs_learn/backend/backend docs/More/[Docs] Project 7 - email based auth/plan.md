@@ -267,19 +267,16 @@ Dashboard (protected)
 > Model: `VerificationToken` | Lib: `lib/email.ts`, `lib/token.ts` | Action: `verifyEmail()` | UI: `(auth)/verify/page.tsx`
 
 **3.1 — Resend setup + `lib/email.ts` banana**
-
 - Pehle `resend` install karo: `npm install resend`
 - `.env` mein `RESEND_API_KEY` add karo
 - `sendEmail()` helper banana — `resend.emails.send()` ka wrapper
 - Test email bhejo — inbox mein verify karo
 
 **3.2 — Verification flow samjho**
-
 - Token kya hota hai — random string — ek baar use hota hai — expiry hoti hai
 - Flow: Register → token generate → email mein link → click → verify → login
 
 **3.3 — `VerificationToken` model banana**
-
 - Tab banao — Phase 3 mein, pehle nahi
 - Fields: `id`, `userId`, `token`, `expiresAt`
 - Migration run karo
