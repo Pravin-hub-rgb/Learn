@@ -83,10 +83,10 @@ export default function RegisterPage() {
           {isPending ? "Registering..." : "Register"}
         </button>
         {/* Server-side error */}
-        {state.error && <div className="text-red-500 ">{state.error}</div>}
-        {state.success && (
+        {state?.error && <div className="text-red-500 ">{state.error}</div>}
+        {state?.success && (
           <div className="text-green-500">
-            Registration Successful! Please login.
+            <p>{state.message}</p>
           </div>
         )}
       </form>

@@ -3,10 +3,14 @@
 import prisma from "@/lib/prisma";
 import { hashPassword } from "@/lib/password";
 import { registrationSchema } from "@/lib/validations/auth";
+import { generateVerificationToken } from "@/lib/token";
+import { sendEmail } from "@/lib/email";
+import { error } from "console";
 
 type RegistrationResult = {
   error?: string;
   success?: boolean;
+  message?: string;
 };
 
 export async function registerUser(
@@ -42,7 +46,22 @@ const {email, password } = result.data;
       },
     });
 
-    console.log("User created successfully:", newUser.id);
+    const token = await generateVerificationToken(newUser.id);
+    const verificationLink = `http://localhost:3000/verify?token=${token}`;
+    await sendEmail({
+      to: newUser.email,
+      subject: "Verify your email",
+      html: `
+      <h1>Welcome!</h1>
+      <p>Thanks for registering. Please verify your email by clicking the link below:</p>
+      <a href="${verificationLink}">Verify Email</a>
+      <p>Yeh link 24 ghante ke andar valid rahega.</p>
+      `
+    })
+    return {
+      success: true,
+      message: "Registration successful! Please check your email to verify your account.",
+    }
     return { success: true }; // void return
   } catch (error) {
     // TypeScript safe type guard
@@ -59,4 +78,30 @@ const {email, password } = result.data;
     console.log("Error occurred:", error);
     return { error: "Something went wrong. Please try again." };
   }
+}
+
+export async function verifyEmail(token: string){
+  const verficationRecord = await prisma.verificationToken.findUnique({
+    where: {
+      token,
+    },
+    include: {User: true,},
+  });
+  if (!verficationRecord) {
+    return {error: "Invalid or expired token"};
+  }
+  if (verficationRecord.expiresAt < new Date()) {
+    await prisma.verificationToken.delete({
+      where: {id: verficationRecord.id},
+    });
+    return {error: "Verification token expired. Please register again."};
+  }
+  await prisma.user.update({
+    where: {id: verficationRecord.userId},
+    data: {isVerified: true},
+  });
+  await prisma.verificationToken.delete({
+    where: {id: verficationRecord.id},
+  })
+  return {success: true};
 }
