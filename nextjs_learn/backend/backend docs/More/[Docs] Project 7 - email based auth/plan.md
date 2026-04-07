@@ -380,7 +380,7 @@ Dashboard (protected)
 ## Phase 5 — Protected Routes
 
 > **Is Phase Mein:**
-> UI: `(protected)/dashboard/page.tsx` | Lib function: `getCurrentUser()` | `middleware.ts` banegi
+> UI: `(protected)/dashboard/page.tsx` | Lib function: `getCurrentUser()` | `proxy.ts` banegi
 
 **5.1 — `getCurrentUser()` helper — `lib/session.ts` mein add karo**
 
@@ -393,7 +393,7 @@ Dashboard (protected)
 - User ka email dikhao
 - Logout button — `logoutUser()` action call
 
-**5.3 — `middleware.ts` — route level protection**
+**5.3 — `proxy.ts` — route level protection**
 
 - Kaunse routes protect karne hain
 - Cookie check — session nahi → `redirect('/login')`
