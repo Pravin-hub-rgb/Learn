@@ -5,7 +5,6 @@ import { hashPassword } from "@/lib/password";
 import { registrationSchema } from "@/lib/validations/auth";
 import { generateVerificationToken } from "@/lib/token";
 import { sendEmail } from "@/lib/email";
-import { error } from "console";
 
 type RegistrationResult = {
   error?: string;

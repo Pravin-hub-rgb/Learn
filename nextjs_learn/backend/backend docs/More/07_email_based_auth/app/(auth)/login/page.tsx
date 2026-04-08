@@ -6,7 +6,7 @@ import { LoginInput, LoginSchema } from "@/lib/validations/auth";
 import { useState } from "react";
 
 export default function LoginPage() {
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginInput>({resolver: zodResolver(LoginSchema)});
+  const { register, handleSubmit, formState: { errors: CSerrors } } = useForm<LoginInput>({resolver: zodResolver(LoginSchema)});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const onSubmit = (data: LoginInput) => {
     setIsSubmitting(true);
@@ -25,25 +25,28 @@ export default function LoginPage() {
             type="email"
             {...register("email")}
             placeholder="Enter your email"
+            className="border-y border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 w-full px-3 py-1"
           />
-          {errors.email?.message && <p style={{ color: "red" }}>{String(errors.email.message)}</p>}
+          {CSerrors.email?.message && <p style={{ color: "red" }}>{String(CSerrors.email.message)}</p>}
 
         </div>
 
-        <div className="m">
+        <div className="mb-6">
           <label htmlFor="password">Password:</label>
           <input
             id="password"
             type="password"
             {...register("password")}
             placeholder="Enter your password"
+            className="border-y border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 w-full px-3 py-1"
           />
-          {errors.password && (
-            <p style={{ color: "red" }}>{errors.password.message}</p>
+          {CSerrors.password && (
+            <p style={{ color: "red" }}>{CSerrors.password.message}</p>
           )}
         </div>
 
-        <button  type="submit" disabled={isSubmitting}>
+        <button
+         className={`w-full py-2 px-4 rounded-md text-white cursor-pointer ${isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-cyan-600 hover:bg-cyan-700"}`}  type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Logging in..." : "Login"}
         </button>
       </form>
