@@ -329,16 +329,16 @@ Dashboard (protected)
 - Email se user dhundo — `prisma.user.findUnique`
 - User nahi mila → `return { error: "Invalid credentials" }`
 
-**4.3 — Password compare karo**
-
-- `comparePassword()` from `lib/password.ts`
-- Match nahi hua → `return { error: "Invalid credentials" }`
-
-**4.4 — `isVerified` check add karo**
+**4.3 — `isVerified` check add karo**
 
 - Password match hone ke baad check karo
 - `isVerified === false` → `return { error: "Please verify your email first" }`
 - Yeh woh check hai jo Phase 3 ke bina possible nahi tha
+
+**4.4 — Password compare karo**
+
+- `comparePassword()` from `lib/password.ts`
+- Match nahi hua → `return { error: "Invalid credentials" }`
 
 **4.5 — Session ki zaroorat kyun — problem dikhao**
 
