@@ -29,7 +29,7 @@ export default function RegisterPage() {
     });
   };
   return (
-    <div className="border-x-4 border-gray-600 p-10 w-170 mx-auto mt-10 rounded-2xl">
+    <div className="border-x-4 border-gray-600 p-10 w-170 mx-auto mt-60 rounded-2xl">
       <h1 className="text-2xl font-bold mb-4 text-center text-cyan-600">
         Register Form
       </h1>

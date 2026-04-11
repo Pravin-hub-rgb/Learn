@@ -346,3 +346,26 @@ Code:
 ...
 Explanation: (code ke baad - GALAT!)
 ```
+
+
+
+
+
+
+---
+
+Yeh pattern follow kar har step mein:
+1. Pehle coder ke dimag ki soch likho "Mujhe ab xyz karna hai isliye main yeh karunga"
+2. Phir uske baad sirf woh 1 ya 2 line code jo abhi add kar rahe hai
+3. Phir har line ka deep explanation:
+   - yeh function kya hai
+   - yeh kaha se aaya hai
+   - isme kya parameters hai
+   - yeh kya return karta hai
+   - kyun yeh use kar rahe hai dusra nahi
+4. Har cheez ko aise explain karo jaise pehli baar dekh raha hai koi
+5. Koi bhi cheez mat assume ki woh already janta hai
+6. Code step by step badhao, ek baar mein poora mat dump karo
+7. Har cheez ke liye **Actual Web Dev Example** do (localhost/production table, code output, kya hoga browser mein etc)
+
+Har single line ke peeche ka reason batana hai. Koi bhi line aise nahi chahiye jiske peeche explanation na ho.

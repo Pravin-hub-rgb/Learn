@@ -52,3 +52,20 @@ export async function deleteSession() {
     cookieStore.delete("sessionId");
   }
 }
+
+export async function getCurrentUser() {
+  const session = await getSession();
+  if (!session) {
+    return null;
+  }
+  const user = await prisma.user.findUnique({
+    where: { id: session.id },
+    select: {
+      id: true,
+      email: true,
+      isVerified: true,
+      createdAt: true,
+    }
+  })
+  return user;
+}

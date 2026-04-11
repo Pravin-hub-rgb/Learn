@@ -380,23 +380,38 @@ Dashboard (protected)
 ## Phase 5 — Protected Routes
 
 > **Is Phase Mein:**
-> UI: `(protected)/dashboard/page.tsx` | Lib function: `getCurrentUser()` | `proxy.ts` banegi
+> 🔴 **PROBLEM FIRST APPROACH:** Pehle problem dikhao, phir solution batavo
+>
+> ✅ Flow: `Blank Dashboard` → `Manual Check` → `Code Repeat Problem` → `Helper Function` → `Route Level Protection`
 
-**5.1 — `getCurrentUser()` helper — `lib/session.ts` mein add karo**
+---
 
+**5.1 — Blank Dashboard Page**
+
+- `(protected)/dashboard/page.tsx` banana
+- Koi bhi check mat lagao, bas simple page
+- 🧠 Show karo ki bina login wale bhi isko access kar sakte hai → **PROBLEM**
+
+**5.2 — Manual Check In Dashboard**
+
+- Dashboard mein `getSession()` call karo
+- Agar null hai toh login page par redirect karo
+- Ab sirf logged in user hi aa sakta hai
+- 🧠 Ab explain karo: yeh sirf ek page ke liye hai. 10 pages hai toh har page par ye same code 10 baar likhna padega → **CODE REPEAT PROBLEM**
+
+**5.3 — `getCurrentUser()` Helper**
+
+- `lib/session.ts` mein add karo
+- Sab checks isme dalo ek jagah
 - `getSession()` → `prisma.user.findUnique` → user return karo
+- 🧠 Ab har page par bas ek line `getCurrentUser()` call karo → **NO CODE REPEAT**
 
-**5.2 — `(protected)/dashboard/page.tsx` banana**
+**5.4 — Middleware / Proxy.ts Route Level Protection**
 
-- Server Component mein `getCurrentUser()` use karo
-- null check — unauthorized → `redirect('/login')`
-- User ka email dikhao
-- Logout button — `logoutUser()` action call
-
-**5.3 — `proxy.ts` — route level protection**
-
-- Kaunse routes protect karne hain
-- Cookie check — session nahi → `redirect('/login')`
+- Ab har page par bhi check nahi lagana padega
+- Middleware mein hi route level par check kar lo
+- Protected routes par automatically check ho jayega
+- 🧠 Ab page mein kuch bhi nahi likhna padenga → 100% automatic
 
 ---
 

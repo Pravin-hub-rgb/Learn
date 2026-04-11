@@ -15,6 +15,7 @@ model User {
   createdAt          DateTime            @default(now())
   verificationTokens VerificationToken[]
   sessions           Session[]
+  passwordResetToken PasswordResetToken?
 }
 
 model VerificationToken {
@@ -31,4 +32,14 @@ model Session {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

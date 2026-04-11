@@ -139,8 +139,12 @@ export async function loginUser(
   redirect("/dashboard");
 }
 
-
 export async function logoutUser() {
-  await deleteSession()
+  await deleteSession();
   redirect("/login");
+}
+
+export async function forgotPassword(prevState: unknown, formData: FormData) {
+  const email = formData.get("email") as string;
+  console.log("Forgot password request for email:", email);
 }

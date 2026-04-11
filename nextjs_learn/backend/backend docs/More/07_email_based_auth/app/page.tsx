@@ -40,6 +40,9 @@ export default async function Home() {
             Login
           </a>
         )}
+        <a className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700" href="/dashboard">
+          Dashboard
+        </a>
       </div>
     </div>
   );
