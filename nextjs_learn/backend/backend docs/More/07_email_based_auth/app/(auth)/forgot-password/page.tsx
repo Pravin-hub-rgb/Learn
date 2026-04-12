@@ -6,7 +6,7 @@ import {
 } from "@/lib/validations/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startTransition, useActionState } from "react";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 export default function ForgotPasswordPage() {
   const [state, formAction, isPending] = useActionState(forgotPassword, null);
@@ -47,6 +47,8 @@ export default function ForgotPasswordPage() {
           </button>
         </div>
       </form>
+      {state?.error && <p className="text-red-500 mt-4">{state?.error}</p>}
+      {state?.message && <p className="text-gray-500 mt-4">{state?.message}</p>}
     </div>
   );
 }

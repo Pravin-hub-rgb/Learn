@@ -458,24 +458,33 @@ Dashboard (protected)
 
 > **Is Phase Mein:**
 > Model: `Account` | OAuth providers: GitHub, Google
+> ✅ Replace manual session management with NextAuth.js
 
-**7.1 — NextAuth.js install + basic config**
+**7.1 — NextAuth.js Introduction**
+
+- Session management architecture decision
+- Manual vs NextAuth session explanation
+- All edge cases & scenarios covered
+
+**7.2 — NextAuth.js install + basic config**
 
 - Existing DB tables ke saath integrate karna
+- Prisma Adapter setup
 
-**7.2 — `Account` model banana**
+**7.3 — `Account` model banana**
 
 - Tab banao — Phase 7 mein, pehle nahi
 - OAuth provider info store karne ke liye
 - Migration run karo
 
-**7.3 — GitHub provider setup**
+**7.4 — GitHub provider setup**
 
-**7.4 — Google provider setup**
+**7.5 — Google provider setup**
 
-**7.5 — Email-based auth + OAuth combine karna**
+**7.6 — Email-based auth + OAuth combine karna**
 
 - Dono ek saath kaam karein — ek hi app mein
+- Credentials Provider for existing email login
 
 ---
 

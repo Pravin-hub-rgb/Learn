@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { LoginInput, LoginSchema } from "@/lib/validations/auth";
 import { useActionState, startTransition } from "react";
 import { loginUser } from "@/app/actions/auth";
+import Link from "next/link";
 
 export default function LoginPage() {
   const {
@@ -69,6 +70,7 @@ export default function LoginPage() {
           {isPending ? "Logging in..." : "Login"}
         </button>
       </form>
+      <Link href="/forgot-password" className="underline mt-4 block">Forgot Password?</Link>
     </div>
   );
 }

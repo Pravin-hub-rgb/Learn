@@ -15,6 +15,7 @@ import { sendEmail, sendPasswordResetEmail } from "@/lib/email";
 import { comparePasswords, hashPassword } from "@/lib/password";
 import { createSession, deleteSession } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { success } from "zod";
 
 type RegistrationResult = {
   error?: string;
@@ -152,7 +153,10 @@ export async function logoutUser() {
   redirect("/login");
 }
 
-export async function forgotPassword(prevState: unknown, formData: FormData) {
+export async function forgotPassword(
+  prevState: unknown,
+  formData: FormData,
+): Promise<{ error?: string; success?: boolean; message?: string }> {
   const email = formData.get("email") as string;
   console.log("email", email);
 
@@ -170,8 +174,8 @@ export async function forgotPassword(prevState: unknown, formData: FormData) {
   }
   if (!user) {
     return {
-      success: true,
-      message: "Check your email for password reset link",
+      success: false,
+      error: "Create an account first",
     };
   }
 
@@ -185,14 +189,17 @@ export async function forgotPassword(prevState: unknown, formData: FormData) {
   };
 }
 
-export async function resetPassword(prevState: unknown, formData: FormData) {
+export async function resetPassword(
+  prevState: unknown,
+  formData: FormData,
+): Promise<{ error?: string; success?: boolean; message?: string }> {
   const validated = ResetPasswordSchema.safeParse({
     token: formData.get("token"),
     password: formData.get("password"),
-    confirmPassword: formData.get("confirmPassword")
+    confirmPassword: formData.get("confirmPassword"),
   });
   if (!validated.success) {
-    return { error: validated.error.issues[0].message };
+    return { error: validated.error.issues[0].message, success: false };
   }
 
   const password = formData.get("password") as string;
@@ -205,14 +212,43 @@ export async function resetPassword(prevState: unknown, formData: FormData) {
   if (!passwordResetToken) {
     return {
       error: "Invalid reset token",
+      success: false,
     };
   }
   if (passwordResetToken.expiresAt < new Date()) {
     return {
       error: "Reset token has expired",
+      success: false,
     };
   }
-  console.log("Token is valid");
+  if (password !== confirmPassword) {
+    return {
+      error: "Passwords do not match",
+      success: false,
+    };
+  }
+  const hashedPassword = await hashPassword(password);
+  await prisma.user.update({
+    where: { id: passwordResetToken.userId },
+    data: { password: hashedPassword },
+  });
+  await prisma.passwordResetToken.delete({
+    where: { id: passwordResetToken.id },
+  });
 
-  return {};
+  // Invalidate all sessions for this user
+  await prisma.session.deleteMany({
+    where: { userId: passwordResetToken.id },
+  });
+
+  // Delete token so it can't be used again
+  await prisma.passwordResetToken.delete({
+    where: { id: passwordResetToken.id },
+  });
+
+  return {
+    success: true,
+    message:
+      "Password reset successful! You can now log in with your new password.",
+  };
 }

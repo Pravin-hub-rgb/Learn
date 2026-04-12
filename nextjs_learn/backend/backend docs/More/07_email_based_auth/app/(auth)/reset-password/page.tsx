@@ -1,24 +1,33 @@
 "use client";
 import { resetPassword } from "@/app/actions/auth";
 import { useSearchParams } from "next/navigation";
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ResetPasswordSchema, ResetPasswordInput } from "@/lib/validations/auth";
+import {
+  ResetPasswordSchema,
+  ResetPasswordInput,
+} from "@/lib/validations/auth";
 
 export default function ResetPasswordPage() {
   const token = useSearchParams().get("token");
   const [state, formAction, isPending] = useActionState(resetPassword, null);
-  const {register, handleSubmit, formState: {errors: CSerrors}} = useForm<ResetPasswordInput>({
-    resolver: zodResolver(ResetPasswordSchema)
-  })
-  const onSubmit = (data: ResetPasswordInput) => {    
+  const {
+    register,
+    handleSubmit,
+    formState: { errors: CSerrors },
+  } = useForm<ResetPasswordInput>({
+    resolver: zodResolver(ResetPasswordSchema),
+  });
+  const onSubmit = (data: ResetPasswordInput) => {
     const formData = new FormData();
     formData.append("token", token || "");
     formData.append("password", data.password);
     formData.append("confirmPassword", data.confirmPassword);
-    formAction(formData);
-  } 
+    startTransition(() => {
+      formAction(formData);
+    });
+  };
   if (!token) {
     return (
       <div className="max-w-md mx-auto mt-20 p-6 border rounded-lg">
@@ -36,7 +45,7 @@ export default function ResetPasswordPage() {
           <label className="block mb-2">New Password</label>
           <input
             type="password"
-            name="password"
+            {...register("password")}
             required
             className="w-full px-3 py-2 border rounded"
           />
@@ -54,13 +63,16 @@ export default function ResetPasswordPage() {
             className="w-full px-3 py-2 border rounded"
           />
           {CSerrors.confirmPassword && (
-            <span className="text-red-500">{CSerrors.confirmPassword.message}</span>
+            <span className="text-red-500">
+              {CSerrors.confirmPassword.message}
+            </span>
           )}
         </div>
 
         <button
           type="submit"
           className="w-full bg-blue-500 text-white py-2 rounded"
+          disabled={isPending}
         >
           Reset Password
         </button>
