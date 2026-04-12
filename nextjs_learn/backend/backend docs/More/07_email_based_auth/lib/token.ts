@@ -39,4 +39,5 @@ export async function generatePasswordResetToken(userId: string) {
       expiresAt,
     }
   })
+  return passwordResetToken.token;
 }

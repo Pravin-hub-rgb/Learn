@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { LoginInput, LoginSchema } from "@/lib/validations/auth";
-import { useActionState, useState, startTransition } from "react";
+import { useActionState, startTransition } from "react";
 import { loginUser } from "@/app/actions/auth";
 
 export default function LoginPage() {

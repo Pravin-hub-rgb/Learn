@@ -30,3 +30,15 @@ export async function sendEmail({
     throw error;
   }
 }
+
+
+export async function sendPasswordResetEmail(email: string, token: string) {
+  await sendEmail({
+    to: email,
+    subject: "Password Reset Request",
+    html: `
+      <p>You requested a password reset. Click the link below to reset your password:</p>
+      <a href="http://localhost:3000/reset-password?token=${token}" target="_blank">Reset Password</a>
+    `
+  })
+}

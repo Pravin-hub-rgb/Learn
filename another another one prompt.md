@@ -369,3 +369,14 @@ Yeh pattern follow kar har step mein:
 7. Har cheez ke liye **Actual Web Dev Example** do (localhost/production table, code output, kya hoga browser mein etc)
 
 Har single line ke peeche ka reason batana hai. Koi bhi line aise nahi chahiye jiske peeche explanation na ho.
+
+Har step ke upar bas itna add karo:
+
+```javascript
+🧠 **SOCH:**
+✅ Hum is step mein [step ka kaam] kar rahe hai
+✅ Kyunki [reason]
+✅ Agar yeh nahi karoge toh [problem] hoga
+✅ Iske baad hum [next step] karenge
+```
+

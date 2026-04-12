@@ -1,9 +1,17 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { LoginSchema, registrationSchema } from "@/lib/validations/auth";
-import { generateVerificationToken } from "@/lib/token";
-import { sendEmail } from "@/lib/email";
+import {
+  ForgotPasswordSchema,
+  LoginSchema,
+  registrationSchema,
+  ResetPasswordSchema,
+} from "@/lib/validations/auth";
+import {
+  generatePasswordResetToken,
+  generateVerificationToken,
+} from "@/lib/token";
+import { sendEmail, sendPasswordResetEmail } from "@/lib/email";
 import { comparePasswords, hashPassword } from "@/lib/password";
 import { createSession, deleteSession } from "@/lib/session";
 import { redirect } from "next/navigation";
@@ -146,5 +154,65 @@ export async function logoutUser() {
 
 export async function forgotPassword(prevState: unknown, formData: FormData) {
   const email = formData.get("email") as string;
-  console.log("Forgot password request for email:", email);
+  console.log("email", email);
+
+  const validated = ForgotPasswordSchema.safeParse({ email });
+  if (!validated.success) {
+    return { error: validated.error.issues[0].message };
+  }
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+  if (user && !user.isVerified) {
+    return {
+      error: "Please verify your email first",
+    };
+  }
+  if (!user) {
+    return {
+      success: true,
+      message: "Check your email for password reset link",
+    };
+  }
+
+  const passwordResetToken = await generatePasswordResetToken(user.id);
+  await sendPasswordResetEmail(user.email, passwordResetToken);
+  console.log("Password reset token generated:", passwordResetToken);
+
+  return {
+    success: true,
+    message: "Check your email for password reset link",
+  };
+}
+
+export async function resetPassword(prevState: unknown, formData: FormData) {
+  const validated = ResetPasswordSchema.safeParse({
+    token: formData.get("token"),
+    password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword")
+  });
+  if (!validated.success) {
+    return { error: validated.error.issues[0].message };
+  }
+
+  const password = formData.get("password") as string;
+  const confirmPassword = formData.get("confirmPassword") as string;
+  const token = formData.get("token") as string;
+  const passwordResetToken = await prisma.passwordResetToken.findUnique({
+    where: { token },
+  });
+  console.log("passwordResetToken", passwordResetToken);
+  if (!passwordResetToken) {
+    return {
+      error: "Invalid reset token",
+    };
+  }
+  if (passwordResetToken.expiresAt < new Date()) {
+    return {
+      error: "Reset token has expired",
+    };
+  }
+  console.log("Token is valid");
+
+  return {};
 }
