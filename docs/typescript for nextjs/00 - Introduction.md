@@ -72,4 +72,4 @@
 
 Ab hum pehle **Basic Types** shuru karte hai. Ye TypeScript ka foundation hai. Iske baad har cheez aasani se samajh aayegi.
 
-👉 Next File: `01 - TypeScript Basic Types.md`
+👉 Next File: `01 - TypeScript Basic Types.md`.
