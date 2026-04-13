@@ -38,3 +38,43 @@ Har file mein yehi pattern follow hoga:
 6. Next file ka reference at end
 
 ✅ Sab files interconnected honge, koi cheez out of blue nahi aayegi
+
+---
+
+## 🚀 Official Workflow For Notes Creation
+
+**Har file banane ke liye hamesha ye steps follow karo:**
+
+1.  📌 Issi file se topic aur uska exact time stamp le lo
+2.  📖 `transcript.md` file mein us time stamp ke beech ka poora content padho
+3.  ✂️ Usko proper logical sections mein break karo
+4.  🧠 Har section ke upar pehle SOCH section add karo
+5.  ❌ **Problem First:** Pehle problem dikhao, phir uska solution TypeScript mein dikhao
+6.  📝 Code ko step by step badhao — ek baar mein poora mat paste karo
+7.  💡 Har single line code ke peeche ka proper reason batana hai
+8.  👇 Har file ke end mein next file ka link de do
+
+---
+
+### ✅ Har Step Ka Standard Pattern:
+```
+🧠 **SOCH:**
+✅ Hum is step mein [step ka kaam] kar rahe hai
+✅ Kyunki [proper reason]
+✅ Agar yeh nahi karoge toh [kya problem hoga]
+✅ Iske baad hum [next step] karenge
+
+**Kyun Yahi Karna Hai:**
+Yeh kya jaruri hai, iske bina kya problem aayegi, dusra approach kyun galat hai
+
+**Actual Concept:**
+Deep mein explain karo ki yeh cheez kya hai, kaise kaam karta hai, TypeScript mein kaise implement hota hai
+
+**Code:**
+```typescript
+// Sirf wahi code jo abhi add kar rahe hai, poora nahi
+```
+
+**Line By Line Explanation:**
+Har line ko alag se explain karo, kya kar raha hai, kyun use kiya hai
+```
