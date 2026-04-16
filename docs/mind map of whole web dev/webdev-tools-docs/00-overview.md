@@ -581,6 +581,34 @@ ShopKaro mein:
 
 ---
 
+## 🌐 Web Servers (Apache / Nginx)
+
+Ye traditional web servers hai jo overview mein nahi aaye kyunki aaj kal managed hosting inko automatically handle karte hai. Lekin ye bahut important hai interview ke liye.
+
+| Apache HTTP Server | Nginx |
+|--------------------|-------|
+| 🟡 Legacy / 1995 se hai | 🟢 Modern / 2004 |
+| Process based architecture | Event driven architecture |
+| High load par slow ho jata hai | 10x faster hai high concurrency mein |
+| .htaccess support hai | Nahi hai |
+| Configure karna aasan hai | Thoda tricky hai |
+| WordPress, PHP ke liye sabse popular | Ab industry standard hai har jagah |
+
+✅ **Actual mein ye kya karte hai:**
+- Port 80 / 443 pe request accept karte hai
+- Reverse proxy ka kaam karte hai apne application tak request bhejte hai
+- SSL Certificate handle karte hai
+- Static files serve karte hai
+- Load balancing, Rate limiting, Gzip compression sab karte hai
+
+✅ **Aaj kal kyun nahi dikhte:**
+Vercel, Railway, Netlify, Render, Fly.io sab ke peeche Nginx hi chalta hai lekin wo tumhe kabhi nahi dikhta. Sab automatically manage hota hai.
+
+✅ **Industry Standard 2024:**
+Koi bhi naya developer ab manually Nginx setup nahi karta. Sab managed hosting use karte hai. Lekin interview mein ye poochte hi hai isliye basic idea hona chahiye.
+
+---
+
 ## Agla Doc
 
 `01-frontend-state.md` — State Management ke saare tools deep mein — Redux, Zustand, Jotai, MobX — Zomato, Amazon, Swiggy jaisi apps ke examples ke saath.
