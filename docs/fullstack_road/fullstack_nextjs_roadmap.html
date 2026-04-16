@@ -1,0 +1,722 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+
+.roadmap { padding: 1.5rem 0; max-width: 860px; }
+
+.phase-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+
+.phase-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+  user-select: none;
+}
+
+.phase-header:hover { background: var(--color-background-secondary); }
+
+.phase-left { display: flex; align-items: center; gap: 12px; }
+
+.phase-badge {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.phase-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
+
+.phase-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-pill {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  min-width: 60px;
+  text-align: right;
+}
+
+.chevron {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  transition: transform 0.2s;
+}
+.chevron.open { transform: rotate(180deg); }
+
+.phase-body { padding: 0; }
+
+.section {
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+}
+.section:last-child { border-bottom: none; }
+
+.section-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  padding: 0.65rem 1.25rem 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.topic-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0.45rem 1.25rem;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.1s;
+}
+.topic-item:hover { background: var(--color-background-secondary); }
+
+.topic-item input[type="checkbox"] {
+  margin-top: 3px;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  cursor: pointer;
+  accent-color: var(--color-text-info, #378ADD);
+}
+
+.topic-label {
+  font-size: 14px;
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.topic-item.checked .topic-label {
+  color: var(--color-text-tertiary);
+  text-decoration: line-through;
+}
+
+.progress-bar-wrap {
+  height: 3px;
+  background: var(--color-background-secondary);
+}
+.progress-bar-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.global-stats {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  padding: 0.75rem 1rem;
+  flex: 1;
+  min-width: 100px;
+}
+.stat-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.stat-value { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+
+.reset-btn {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  background: none;
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-md);
+  padding: 4px 12px;
+  cursor: pointer;
+  margin-bottom: 1.25rem;
+}
+.reset-btn:hover { background: var(--color-background-secondary); }
+</style>
+
+<h2 class="sr-only">Full-stack Next.js developer roadmap with checkboxes to track your progress across learning phases</h2>
+
+<div class="roadmap" id="app"></div>
+
+<script>
+const PHASES = [
+  {
+    id: 'p1',
+    title: 'Phase 1 — Foundation',
+    subtitle: 'The bedrock before any framework',
+    color: '#B5D4F4',
+    textColor: '#0C447C',
+    fillColor: '#E6F1FB',
+    sections: [
+      {
+        title: 'HTML & CSS',
+        topics: [
+          'Semantic HTML5 elements & accessibility (ARIA roles)',
+          'CSS box model, flexbox, grid layout',
+          'Responsive design & media queries',
+          'CSS variables, pseudo-classes, pseudo-elements',
+          'CSS animations & transitions',
+          'Forms: inputs, validation, labels'
+        ]
+      },
+      {
+        title: 'JavaScript (Core)',
+        topics: [
+          'Variables, data types, operators',
+          'Functions — declarations, expressions, arrow functions',
+          'Scope, closures, hoisting',
+          'Arrays & objects — methods, destructuring, spread',
+          'Asynchronous JS — callbacks, promises, async/await',
+          'Fetch API, JSON handling',
+          'ES6+ features — optional chaining, nullish coalescing, modules',
+          'DOM manipulation & events',
+          'Error handling — try/catch, error boundaries concept'
+        ]
+      },
+      {
+        title: 'Dev Tools & Git',
+        topics: [
+          'Terminal & command line basics',
+          'Git — init, add, commit, push, pull, merge',
+          'Branching strategies (feature branches, main/dev)',
+          'GitHub — PRs, issues, README writing',
+          'Browser DevTools — Elements, Console, Network, Performance',
+          'VS Code setup — extensions, shortcuts, settings sync'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p2',
+    title: 'Phase 2 — React Fundamentals',
+    subtitle: 'Core React before Next.js',
+    color: '#9FE1CB',
+    textColor: '#085041',
+    fillColor: '#E1F5EE',
+    sections: [
+      {
+        title: 'React Basics',
+        topics: [
+          'JSX syntax & expressions',
+          'Components — functional vs class (know class, use functional)',
+          'Props — passing, destructuring, defaultProps',
+          'State — useState hook',
+          'Conditional rendering & list rendering',
+          'Component composition & children prop',
+          'Keys in lists & why they matter'
+        ]
+      },
+      {
+        title: 'React Hooks',
+        topics: [
+          'useEffect — side effects, dependency array, cleanup',
+          'useContext — creating and consuming context',
+          'useRef — DOM access, mutable values',
+          'useReducer — complex state logic',
+          'useMemo & useCallback — performance optimization',
+          'Custom hooks — extracting logic into reusable hooks'
+        ]
+      },
+      {
+        title: 'React Patterns & Ecosystem',
+        topics: [
+          'Lifting state up & data flow',
+          'Controlled vs uncontrolled components',
+          'React Router — routes, params, nested routes',
+          'Forms — react-hook-form basics',
+          'Error boundaries',
+          'Lazy loading & React.Suspense',
+          'React DevTools usage'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p3',
+    title: 'Phase 3 — TypeScript',
+    subtitle: 'Type safety for everything you\'ll build',
+    color: '#FAC775',
+    textColor: '#633806',
+    fillColor: '#FAEEDA',
+    sections: [
+      {
+        title: 'TypeScript Core',
+        topics: [
+          'Primitive types, arrays, tuples',
+          'Interfaces vs type aliases',
+          'Union types, intersection types',
+          'Optional & readonly properties',
+          'Generics — functions, components, utilities',
+          'Enums',
+          'Type assertions & type guards',
+          'Utility types — Partial, Required, Pick, Omit, Record, ReturnType'
+        ]
+      },
+      {
+        title: 'TypeScript in React',
+        topics: [
+          'Typing props & state',
+          'Typing hooks (useState<T>, useRef<T>)',
+          'Typing event handlers',
+          'Typing children (ReactNode, ReactElement)',
+          'Typing context',
+          'tsconfig.json — strict mode, paths, moduleResolution'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p4',
+    title: 'Phase 4 — Next.js Core',
+    subtitle: 'The framework itself — deeply',
+    color: '#EEEDFE',
+    textColor: '#3C3489',
+    fillColor: '#EEEDFE',
+    sections: [
+      {
+        title: 'App Router (Next.js 13+)',
+        topics: [
+          'App directory structure — page.tsx, layout.tsx, loading.tsx, error.tsx',
+          'File-based routing — dynamic routes, catch-all, optional catch-all',
+          'Route groups with (folder) syntax',
+          'Parallel routes & intercepting routes',
+          'Link component & navigation',
+          'useRouter, usePathname, useSearchParams hooks',
+          'Middleware — request interception, redirect, rewrite'
+        ]
+      },
+      {
+        title: 'Server vs Client Components',
+        topics: [
+          '"use client" directive — when and why',
+          'Server components — default behavior, no hooks, no browser APIs',
+          'Composing server and client components',
+          'Passing data from server to client components',
+          'Avoiding "use client" sprawl'
+        ]
+      },
+      {
+        title: 'Data Fetching',
+        topics: [
+          'fetch() in server components — caching, revalidation',
+          'Static generation vs dynamic rendering',
+          'Incremental static regeneration (ISR) — revalidate option',
+          'generateStaticParams — pre-rendering dynamic routes',
+          'Server Actions — forms, mutations, progressive enhancement',
+          'useFormState & useFormStatus',
+          'SWR or React Query with client components'
+        ]
+      },
+      {
+        title: 'Next.js APIs & Features',
+        topics: [
+          'API Routes — Route Handlers (route.ts)',
+          'NextResponse & NextRequest',
+          'next/image — optimization, lazy loading, sizes',
+          'next/font — self-hosted fonts, variable fonts',
+          'next/headers — cookies, headers in server components',
+          'Metadata API — static & dynamic metadata, OG images',
+          'next.config.js — rewrites, redirects, env, headers',
+          'Environment variables — .env.local, NEXT_PUBLIC_ prefix'
+        ]
+      },
+      {
+        title: 'Rendering Strategies',
+        topics: [
+          'SSR — Server-side rendering per request',
+          'SSG — Static site generation at build time',
+          'ISR — Incremental static regeneration',
+          'PPR — Partial pre-rendering (Next.js 14+)',
+          'Streaming — Suspense boundaries, loading UI',
+          'Edge runtime vs Node.js runtime'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p5',
+    title: 'Phase 5 — Styling',
+    subtitle: 'Making things look great',
+    color: '#F4C0D1',
+    textColor: '#72243E',
+    fillColor: '#FBEAF0',
+    sections: [
+      {
+        title: 'CSS-in-Next.js',
+        topics: [
+          'CSS Modules — scoped styles, composition',
+          'Global styles & CSS reset',
+          'Tailwind CSS — utility classes, config, dark mode, plugins',
+          'Tailwind — responsive prefixes, state variants (hover, focus)',
+          'shadcn/ui — component library built on Radix + Tailwind',
+          'Styled-components or Emotion (know tradeoffs with SSR)',
+          'clsx / cn utility for conditional classes'
+        ]
+      },
+      {
+        title: 'Design & UI Concepts',
+        topics: [
+          'Design tokens — colors, spacing, typography scale',
+          'Dark mode implementation',
+          'Animations — Framer Motion basics with Next.js',
+          'Accessibility — focus management, color contrast, screen readers',
+          'Responsive images & layouts'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p6',
+    title: 'Phase 6 — Backend & Database',
+    subtitle: 'The full-stack part',
+    color: '#C0DD97',
+    textColor: '#27500A',
+    fillColor: '#EAF3DE',
+    sections: [
+      {
+        title: 'Databases',
+        topics: [
+          'SQL fundamentals — SELECT, JOIN, WHERE, GROUP BY, indexes',
+          'PostgreSQL — setup, psql CLI, data types',
+          'NoSQL concepts — when to use MongoDB vs SQL',
+          'Database design — normalization, relationships, foreign keys',
+          'Connection pooling concepts'
+        ]
+      },
+      {
+        title: 'ORMs & Query Builders',
+        topics: [
+          'Prisma — schema, models, relations, migrations',
+          'Prisma Client — CRUD operations, nested writes, transactions',
+          'Drizzle ORM — schema-first, type-safe queries (alternative to Prisma)',
+          'Database seeding & migrations workflow'
+        ]
+      },
+      {
+        title: 'API Design',
+        topics: [
+          'REST API principles — resources, HTTP methods, status codes',
+          'Route Handlers in Next.js — GET, POST, PUT, DELETE',
+          'Request validation — Zod schema validation',
+          'Error handling in API routes',
+          'GraphQL basics — schema, resolvers, queries, mutations',
+          'tRPC — end-to-end type-safe APIs with Next.js'
+        ]
+      },
+      {
+        title: 'Authentication',
+        topics: [
+          'Auth concepts — sessions, JWT, OAuth 2.0, PKCE',
+          'NextAuth.js (Auth.js v5) — providers, callbacks, session',
+          'Clerk — managed auth, middleware integration',
+          'Role-based access control (RBAC)',
+          'Protecting routes — middleware, server-side checks',
+          'Credentials provider — custom username/password auth'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p7',
+    title: 'Phase 7 — State Management',
+    subtitle: 'Managing complex app state',
+    color: '#F5C4B3',
+    textColor: '#712B13',
+    fillColor: '#FAECE7',
+    sections: [
+      {
+        title: 'Client State',
+        topics: [
+          'useState & useReducer for local state',
+          'Context API — when to use, performance pitfalls',
+          'Zustand — create store, selectors, devtools',
+          'Jotai — atomic state model',
+          'Redux Toolkit — slices, thunks (know if working on enterprise)',
+          'Choosing the right tool — server state vs client state'
+        ]
+      },
+      {
+        title: 'Server State & Caching',
+        topics: [
+          'TanStack Query (React Query) — useQuery, useMutation, invalidation',
+          'SWR — data fetching, revalidation, mutation',
+          'Next.js fetch cache vs React Query — when to use each',
+          'Optimistic updates pattern'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p8',
+    title: 'Phase 8 — Infrastructure & Deployment',
+    subtitle: 'Getting it live and keeping it running',
+    color: '#D3D1C7',
+    textColor: '#444441',
+    fillColor: '#F1EFE8',
+    sections: [
+      {
+        title: 'Deployment',
+        topics: [
+          'Vercel — project setup, env variables, preview deployments',
+          'Vercel Edge network — CDN, edge functions',
+          'Deploy to custom server — Docker + Node.js',
+          'CI/CD — GitHub Actions basics for Next.js',
+          'Preview vs production environments'
+        ]
+      },
+      {
+        title: 'Cloud & Storage',
+        topics: [
+          'Vercel Blob / AWS S3 / Cloudflare R2 — file uploads',
+          'CDN concepts — what gets cached and why',
+          'Serverless functions — cold starts, limits',
+          'Upstash Redis — caching, rate limiting, sessions',
+          'DNS, domains, SSL certificates basics'
+        ]
+      },
+      {
+        title: 'Monitoring & Observability',
+        topics: [
+          'Vercel Analytics & Speed Insights',
+          'Sentry — error tracking, source maps',
+          'Logging — console vs structured logging (Axiom, Datadog)',
+          'Core Web Vitals — LCP, INP, CLS — what they mean & how to fix'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p9',
+    title: 'Phase 9 — Testing',
+    subtitle: 'Confidence at scale',
+    color: '#B5D4F4',
+    textColor: '#0C447C',
+    fillColor: '#E6F1FB',
+    sections: [
+      {
+        title: 'Testing Fundamentals',
+        topics: [
+          'Unit testing — testing pure functions with Vitest / Jest',
+          'Component testing — React Testing Library (RTL)',
+          'RTL — render, screen, userEvent, queries',
+          'Mocking — modules, fetch, external services',
+          'Integration testing — testing multiple components together',
+          'E2E testing — Playwright (preferred) or Cypress',
+          'Playwright — page, locator, expect, network intercept'
+        ]
+      },
+      {
+        title: 'Testing Strategy',
+        topics: [
+          'Testing pyramid — unit, integration, E2E ratio',
+          'What to test and what NOT to test',
+          'Testing async code & server actions',
+          'Testing authentication flows',
+          'CI integration — running tests on push'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p10',
+    title: 'Phase 10 — Performance & Security',
+    subtitle: 'Production-grade quality',
+    color: '#9FE1CB',
+    textColor: '#085041',
+    fillColor: '#E1F5EE',
+    sections: [
+      {
+        title: 'Performance',
+        topics: [
+          'Code splitting & dynamic imports (next/dynamic)',
+          'Image optimization — WebP, AVIF, responsive srcset',
+          'Font optimization — preload, font-display: swap',
+          'Bundle analysis — @next/bundle-analyzer',
+          'Caching strategies — HTTP cache headers, CDN cache',
+          'Database query optimization — N+1 problem, indexes',
+          'Lighthouse auditing workflow'
+        ]
+      },
+      {
+        title: 'Security',
+        topics: [
+          'OWASP Top 10 awareness',
+          'XSS — sanitizing user input, CSP headers',
+          'CSRF — SameSite cookies, token-based protection',
+          'SQL injection — parameterized queries (why ORMs help)',
+          'Environment variable security — never expose secrets client-side',
+          'Rate limiting — Upstash, middleware-based',
+          'HTTPS, HSTS, security headers (X-Frame-Options, etc.)',
+          'Input validation — server-side with Zod always'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p11',
+    title: 'Phase 11 — Advanced Next.js & Patterns',
+    subtitle: 'Senior-level knowledge',
+    color: '#CECBF6',
+    textColor: '#3C3489',
+    fillColor: '#EEEDFE',
+    sections: [
+      {
+        title: 'Advanced Patterns',
+        topics: [
+          'Monorepo setup — Turborepo with multiple Next.js apps',
+          'Shared packages — UI library, utils, types across apps',
+          'Multi-tenancy — subdomain routing, per-tenant data',
+          'Internationalization (i18n) — next-intl, locale routing',
+          'Feature flags — LaunchDarkly, or custom middleware-based',
+          'A/B testing via middleware & edge config',
+          'WebSockets with Next.js — Pusher, Ably, or custom server'
+        ]
+      },
+      {
+        title: 'Real-time & Advanced Data',
+        topics: [
+          'Server-Sent Events (SSE) in Route Handlers',
+          'Streaming AI responses — Vercel AI SDK',
+          'Background jobs — QStash, Trigger.dev, or cron API routes',
+          'Database connection strategies — connection pooling with PgBouncer',
+          'Full-text search — Algolia, Typesense, or Postgres pg_trgm'
+        ]
+      },
+      {
+        title: 'Developer Experience',
+        topics: [
+          'ESLint config for Next.js — custom rules, import ordering',
+          'Prettier setup & format-on-save',
+          'Husky + lint-staged — pre-commit hooks',
+          'Absolute imports via tsconfig paths',
+          'Storybook — component documentation & visual testing',
+          'API documentation — OpenAPI / Swagger for route handlers'
+        ]
+      }
+    ]
+  }
+];
+
+const storage_key = 'nxjs_roadmap_v1';
+
+function loadChecked() {
+  try { return JSON.parse(localStorage.getItem(storage_key) || '{}'); } catch { return {}; }
+}
+
+function saveChecked(state) {
+  try { localStorage.setItem(storage_key, JSON.stringify(state)); } catch {}
+}
+
+let checked = loadChecked();
+let openPhases = {};
+
+function getAllTopics() {
+  let all = [];
+  PHASES.forEach(p => p.sections.forEach(s => s.topics.forEach(t => all.push(p.id + '::' + t))));
+  return all;
+}
+
+function getPhaseTopics(phase) {
+  let all = [];
+  phase.sections.forEach(s => s.topics.forEach(t => all.push(phase.id + '::' + t)));
+  return all;
+}
+
+function countChecked(keys) {
+  return keys.filter(k => checked[k]).length;
+}
+
+function render() {
+  const app = document.getElementById('app');
+  const allKeys = getAllTopics();
+  const totalChecked = countChecked(allKeys);
+  const total = allKeys.length;
+  const pct = total ? Math.round(totalChecked / total * 100) : 0;
+
+  let html = `
+    <div class="global-stats">
+      <div class="stat-card"><div class="stat-label">Topics completed</div><div class="stat-value">${totalChecked} / ${total}</div></div>
+      <div class="stat-card"><div class="stat-label">Overall progress</div><div class="stat-value">${pct}%</div></div>
+      <div class="stat-card"><div class="stat-label">Phases</div><div class="stat-value">${PHASES.length}</div></div>
+    </div>
+    <button class="reset-btn" onclick="resetAll()">Reset all progress</button>
+  `;
+
+  PHASES.forEach((phase, pi) => {
+    const phaseKeys = getPhaseTopics(phase);
+    const phaseChecked = countChecked(phaseKeys);
+    const phaseTotal = phaseKeys.length;
+    const phasePct = phaseTotal ? Math.round(phaseChecked / phaseTotal * 100) : 0;
+    const isOpen = openPhases[phase.id] !== false;
+
+    html += `
+      <div class="phase-card">
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${phasePct}%; background:${phase.color};"></div></div>
+        <div class="phase-header" onclick="togglePhase('${phase.id}')">
+          <div class="phase-left">
+            <span class="phase-badge" style="background:${phase.fillColor}; color:${phase.textColor};">Phase ${pi + 1}</span>
+            <span class="phase-title">${phase.title.replace(/Phase \d+ — /, '')}</span>
+          </div>
+          <div class="phase-meta">
+            <span class="progress-pill">${phaseChecked}/${phaseTotal}</span>
+            <span class="chevron ${isOpen ? 'open' : ''}">▼</span>
+          </div>
+        </div>
+    `;
+
+    if (isOpen) {
+      html += `<div class="phase-body">`;
+      phase.sections.forEach(section => {
+        html += `<div class="section"><div class="section-title">${section.title}</div>`;
+        section.topics.forEach(topic => {
+          const key = phase.id + '::' + topic;
+          const isChecked = !!checked[key];
+          html += `
+            <label class="topic-item ${isChecked ? 'checked' : ''}">
+              <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggle('${key}', this.checked)">
+              <span class="topic-label">${topic}</span>
+            </label>
+          `;
+        });
+        html += `</div>`;
+      });
+      html += `</div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  app.innerHTML = html;
+}
+
+function toggle(key, val) {
+  checked[key] = val;
+  saveChecked(checked);
+  render();
+}
+
+function togglePhase(id) {
+  openPhases[id] = openPhases[id] === false ? true : false;
+  render();
+}
+
+function resetAll() {
+  if (confirm('Reset all progress?')) {
+    checked = {};
+    saveChecked(checked);
+    render();
+  }
+}
+
+render();
+</script>
