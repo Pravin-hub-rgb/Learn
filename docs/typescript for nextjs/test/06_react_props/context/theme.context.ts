@@ -1,11 +1,19 @@
 "use client";
 
-import { ThemeState } from "@/types/theme";
+import { ThemeState, ThemeAction } from "@/types/theme";
 import { createContext } from "react";
 
-const defaultState: ThemeState = {
-  theme: "light",
-  fontSize: 16,
-};
+type ThemeContextType = {
+  state: ThemeState;
+  dispatch: React.Dispatch<ThemeAction>;
+}
 
-export const ThemeContext = createContext<ThemeState>(defaultState);
+const defaultContext: ThemeContextType = {
+  state: {
+    theme: "light",
+    fontSize: 16
+  },
+  dispatch: () => {}
+}
+
+export const ThemeContext = createContext<ThemeContextType>(defaultContext)

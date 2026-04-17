@@ -6,8 +6,8 @@ export default function ThemeButton() {
     const state = useContext(ThemeContext)
     return (
         <div>
-            <p>Theme: {state.theme}</p>
-            <p>Font Size: {state.fontSize}</p>
+            {/* <p>Theme: {state.theme}</p>
+            <p>Font Size: {state.fontSize}</p> */}
         </div>
     )
 }
