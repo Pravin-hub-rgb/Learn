@@ -18,7 +18,7 @@ Maano tumhare paas 2 gadi hai:
 
 ```
 🏠 Pages Router (Old Way):
-Tum apne ghar ke har kamre ke liye alag alag entrance bana lo. Har kamre mein sab kuch alag hoga. Agar tumhe har kamre mein same header chahiye toh har file mein copy paste karo. Har kamre mein ghusan se pehle poora load hona padta hai.
+Tum apne ghar ke har kamre ke liye alag alag entrance bana lo. Har kamre mein sab kuch alag hoga. Agar tumhe har kamre mein same header chahiye toh har file mein copy paste karo. Har kamre mein ghusane se pehle poora load hona padta hai.
 
 🏢 App Router (New Way):
 Tum apne ghar ka ek proper structure banao. Sab se pehle ek common entrance hai (Root Layout), uske andar hall hai, uske andar bedrooms hai. Sab cheezein nested hai. Har level par apna apna header, loader, error handling hai. Tum har cheez ko apne jagah pe rehte hue customize kar sakte ho.
